@@ -2,22 +2,16 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/utils/Theme";
 import { Menu, Sun, Moon } from "lucide-react";
 import { Link } from "react-router";
-import LogoWhite from "../assets/logo_light.svg";
-import LogoDark from "../assets/logo_dark.svg";
+import Logo from "./logo";
 
 export default function Header() {
 
   const { darkMode, toggleTheme } = useTheme();
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-md">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <Link to="/" className="flex items-center space-x-2">
-          <img src={darkMode ? LogoDark : LogoWhite} alt="Logo" className="h-20 w-20" />
-          <span className="text-xl font-semibold text-gray-900 dark:text-white">
-            originally
-          </span>
-        </Link>
+    <header className="bg-white dark:bg-secondary shadow-md">
+      <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+        <Logo />
 
         <nav className="hidden md:flex space-x-6">
           <Link to="/" className="text-gray-700 dark:text-gray-300 ">

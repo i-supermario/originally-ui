@@ -6,7 +6,7 @@ export default function PrimaryLayout(){
   return(
     <>
       <div
-        className="flex flex-col border-b grow"
+        className="flex flex-col grow"
       >
         <Header/>
         <Outlet/>
