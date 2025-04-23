@@ -1,8 +1,8 @@
 import { AxiosInstance } from "@/config/axios";
 
 type Callbacks<T> = {
-  onSuccess: (data: T) => void;
-  onError?: (error: Error) => void;
+  onSuccess: (data: any) => void;
+  onError: (data: any) => void;
 };
 
 export const GetRequest = async <T>(
@@ -26,6 +26,9 @@ export const PostRequest = async <T>(
 ): Promise<void> => {
   try {
     const response = await AxiosInstance.post<T>(url, body);
+    if(response.status != 200){
+      onError(response.data);
+    }
     onSuccess(response.data);
   } catch (error: any) {
     const err = new Error(error?.response?.data?.message || 'Something went wrong');

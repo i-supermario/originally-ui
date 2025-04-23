@@ -7,6 +7,7 @@ import PrimaryLayout from './layouts/primary.tsx'
 import { ThemeProvider } from './utils/Theme.tsx'
 import SignUp from './pages/SignUp.tsx'
 import { CenteredLayout } from './layouts/centered.tsx'
+import Dashboard from './pages/Dashboard.tsx'
 
 
 
@@ -21,7 +22,8 @@ createRoot(document.getElementById('root')!).render(
       </Routes>
       <Routes>
         <Route element= {<CenteredLayout/>}>
-          <Route path='/login' element={<SignUp/>}  />
+          <Route path='/sign-up' element={<SignUp/>}  />
+          <Route path='/dashboard' element={<Dashboard/>} />
         </Route>
       </Routes>
     </BrowserRouter>

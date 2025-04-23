@@ -21,8 +21,8 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <Button asChild>
-            <Link to="/login">login</Link>
+          <Button asChild variant="outline">
+            <Link to="/sign-up">Sign Up</Link>
           </Button>
           <button className="md:hidden text-foreground">
             <Menu className="h-6 w-6" />

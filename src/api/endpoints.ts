@@ -1,5 +1,5 @@
 export const ENDPOINTS = {
   user: {
-    signup: "/user/signup",
+    signup: "/user/sign-up",
   }
 }

@@ -1,37 +1,96 @@
+import { API } from "@/api";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthSevice";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Calendar1Icon } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { z } from "zod";
 
 const FormSchema = z.object({
-  email: z.string().email({
+  email: z.string({
+    required_error: "A email address is required"
+  }).email({
     message: "Please provide a valid email address"
   }),
-  password: z.string().min(8,
+  password: z.string({
+    required_error: "A password is required"
+  }).min(8,
     {
       message: "Password must be atleast 8 characters"
     }
   ),
+  firstName: z.string({
+    required_error: "first name is required"
+  }),
+  lastName: z.string({
+    required_error: "last name is required"
+  }),
+  dob: z.date({
+    required_error: "Date of Birth is required"
+  }).max(new Date()),
+  phoneNo: z.string({
+    required_error: "Phone no is required"
+  }).min(10),
 
 })
 
 export default function SignUp(){
 
+
+
+  const firebaseAuthService = FirebaseAuthService.getInstance();
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
-      password: ""
+      password: "",
+      firstName: "",
+      lastName: "",
+      dob: new Date(),
+      phoneNo: "",
     }
   })
 
+  if(loading){
+    return <>Loading</>
+  }
+
   
 
-  const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+
+    setLoading(true)
+
+    const { email, password} = values;
+
+    const user = await firebaseAuthService.signUpUserWithEmailAndPassword({ email, password })
+    
+    await API.METHODS.Post(API.ENDPOINTS.user.signup, { token: await user.getIdToken() ,...values } ,
+      { 
+        onSuccess: (message) => { 
+          console.log("Successfully Signed In", message) 
+          navigate('/dashboard')
+
+        },
+        onError: (data: any) => { console.log(data) }
+      }
+    )
+
+    setLoading(false)
+
   }
+
+
 
   return (
     <>
@@ -47,6 +106,106 @@ export default function SignUp(){
               )
             }
           >
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({field}) => (
+
+                <FormItem>
+                  <FormLabel>first name</FormLabel>
+                  <FormControl>
+                    <Input { ...field } />
+                  </FormControl>
+                  <FormMessage/>
+                </FormItem>
+
+              )}
+
+            />
+
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({field}) => (
+
+                <FormItem>
+                  <FormLabel>last name</FormLabel>
+                  <FormControl>
+                    <Input { ...field } />
+                  </FormControl>
+                  <FormMessage/>
+                </FormItem>
+
+              )}
+
+            />
+
+            <FormField
+              control={form.control}
+              name="dob"
+              render={({field}) => (
+
+                <FormItem>
+                  <FormLabel>birthday</FormLabel>
+                  <FormControl>
+                  <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                              <span>{field.value ? 
+                                `${field.value.toLocaleDateString()}`
+                               : 
+                                "Pick a date"
+                              }</span>
+                            
+                            <Calendar1Icon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          className="bg-white"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage/>
+                </FormItem>
+
+              )}
+
+            />
+
+            <FormField
+              control={form.control}
+              name="phoneNo"
+              render={({field}) => (
+
+                <FormItem>
+                  <FormLabel>phone no</FormLabel>
+                  <FormControl>
+                    <Input { ...field } />
+                  </FormControl>
+                  <FormMessage/>
+                </FormItem>
+
+              )}
+
+            />
+
             <FormField
               control={form.control}
               name="email"
