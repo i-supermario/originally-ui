@@ -1,4 +1,4 @@
-import { getAuth, Auth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseService } from "./FirebaseService";
 
 
@@ -22,9 +22,13 @@ export class FirebaseAuthService{
 
   async signUpUserWithEmailAndPassword(params: { email: string, password: string }){
     const response = await createUserWithEmailAndPassword(this.auth, params.email, params.password)
-
     return response.user;
 
+  }
+
+  async loginWithEmailAndPassword(params: { email: string, password: string }){
+    const response = await signInWithEmailAndPassword(this.auth, params.email, params.password)
+    return response.user;
   }
 
 
