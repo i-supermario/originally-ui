@@ -4,6 +4,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Progress } from "@/components/ui/progress";
 import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthSevice";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -47,6 +48,7 @@ export default function SignUp(){
 
   const firebaseAuthService = FirebaseAuthService.getInstance();
   const [loading, setLoading] = useState<boolean>(false);
+  const [progressValue,setProgressValue] = useState<number>(0);
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -62,7 +64,7 @@ export default function SignUp(){
   })
 
   if(loading){
-    return <>Loading</>
+    return <div className="w-screen px-80"><Progress value={progressValue} /></div>
   }
 
   
@@ -70,10 +72,17 @@ export default function SignUp(){
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
 
     setLoading(true)
+    setProgressValue(10);
+
 
     const { email, password} = values;
 
+    setProgressValue(25);
+
     const user = await firebaseAuthService.signUpUserWithEmailAndPassword({ email, password })
+
+    setProgressValue(65);
+
     
     await API.METHODS.Post(API.ENDPOINTS.user.signup, { token: await user.getIdToken() ,...values } ,
       { 
@@ -85,6 +94,9 @@ export default function SignUp(){
         onError: (data: any) => { console.log(data) }
       }
     )
+
+    setProgressValue(100);
+
 
     setLoading(false)
 
