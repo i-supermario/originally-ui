@@ -5,8 +5,8 @@ import { GetRequest, PostRequest } from "./methods";
 export const API = {
   ENDPOINTS: ENDPOINTS,
   METHODS: {
-    Get: GetRequest,
-    Post: PostRequest
+    GET: GetRequest,
+    POST: PostRequest
   },
   ERRORS: ERROR_MESSAGES
 }
