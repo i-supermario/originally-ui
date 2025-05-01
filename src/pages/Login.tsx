@@ -53,7 +53,7 @@ export default function Login(){
 
     const user = await firebaseAuthService.loginWithEmailAndPassword({ email, password })
     
-    await API.METHODS.Post(API.ENDPOINTS.user.login, { token: await user.getIdToken() ,...values } ,
+    await API.METHODS.POST(API.ENDPOINTS.user.login, { token: await user.getIdToken() ,...values } ,
       { 
         onSuccess: (message) => { 
           console.log("Successfully Logged In", message) 

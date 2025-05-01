@@ -4,11 +4,15 @@ import { createContext, PropsWithChildren, useContext, useEffect, useState } fro
 type ISessionContext = {
   email: string
   sessionId: string
+  isLoading: boolean
+  clearSession: () => void
 }
 
 const defaultValues: ISessionContext = {
   email: "",
   sessionId: "",
+  isLoading: true,
+  clearSession: () => {}
 }
 
 const SessionContext = createContext<ISessionContext>(defaultValues);
@@ -17,21 +21,33 @@ function SessionProvider({children}: PropsWithChildren){
 
   const [email, setEmail] = useState<string>("");
   const [sessionId, setSessionId] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const clearSession = () => { 
+    setSessionId("")
+    
+  }
 
   useEffect(() => {
-    API.METHODS.GET(`API.ENDPOINTS.session.userSessionInfo/`, {
-      onSuccess: (data: ISessionContext ) => 
-        { 
-          setEmail(data.email); 
-          setSessionId(data.sessionId) 
-        },
-      onError: () => {  }
-    })
+        async function loadSessionInfo(){
+          await API.METHODS.GET(`${API.ENDPOINTS.session.userSessionInfo}`, { withCredentials: true } ,{
+            onSuccess: (data: ISessionContext ) => 
+              { 
+                console.log(data);
+                setEmail(data.email); 
+                setSessionId(data.sessionId) 
+                setIsLoading(false);
+              },
+            onError: () => {  }
+          })
+        }
+
+        loadSessionInfo();
+
   },[])
 
   return (
     <>
-      <SessionContext.Provider value={{email, sessionId}} >
+      <SessionContext.Provider value={{email, sessionId, isLoading, clearSession}} >
         {children}
       </SessionContext.Provider>
     </>

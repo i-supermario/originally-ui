@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { Link } from "react-router";
 import Logo from "./logo";
+import { useSession } from "@/providers/SessionProvider";
 
 export default function Header() {
+
+  const { sessionId, clearSession } = useSession();
 
   return (
     <header className="bg-background shadow-md">
@@ -18,18 +21,28 @@ export default function Header() {
             about
           </Link>
         </nav>
-
-        <div className="flex items-center space-x-4">
-          <Button asChild variant="outline">
-            <Link to="/sign-up">Sign Up</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to="/login">Login</Link>
-          </Button>
-          <button className="md:hidden text-foreground">
-            <Menu className="h-6 w-6" />
-          </button>
-        </div>
+        {
+          sessionId ? 
+          <div>
+            <Button className="text-black" variant="outline" onClick={() => { clearSession() }}>
+              Logout
+            </Button>
+          </div>
+          :
+          <div className="flex items-center space-x-4">
+            <Button asChild variant="outline">
+              <Link to="/sign-up">Sign Up</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link to="/login">Login</Link>
+            </Button>
+            <button className="md:hidden text-foreground">
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
+        }
+        
+        
       </div>
     </header>
   );

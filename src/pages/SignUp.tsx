@@ -7,11 +7,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Progress } from "@/components/ui/progress";
 import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthSevice";
 import { cn } from "@/lib/utils";
+import { useSession } from "@/providers/SessionProvider";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Calendar1Icon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -47,9 +49,19 @@ export default function SignUp(){
 
 
   const firebaseAuthService = FirebaseAuthService.getInstance();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [progressValue,setProgressValue] = useState<number>(0);
+
   const navigate = useNavigate();
+  const { email, sessionId, isLoading: isSessionLoading } = useSession();
+  const [loading, setLoading] = useState<boolean>(false || isSessionLoading);
+  const [progressValue,setProgressValue] = useState<number>(0);
+
+  useEffect(() => {
+    setLoading(isSessionLoading);
+  },[isSessionLoading])
+
+  useEffect(() => {
+    if(email) navigate('/dashboard')
+  })
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -74,26 +86,29 @@ export default function SignUp(){
     setLoading(true)
     setProgressValue(10);
 
-
     const { email, password} = values;
 
     setProgressValue(25);
 
-    const user = await firebaseAuthService.signUpUserWithEmailAndPassword({ email, password })
+    try {
+      const user = await firebaseAuthService.signUpUserWithEmailAndPassword({ email, password })
 
-    setProgressValue(65);
+      setProgressValue(65);
+      await API.METHODS.POST(API.ENDPOINTS.user.signup, { token: await user.getIdToken() ,...values }, { withCredentials: true} ,
+        { 
+          onSuccess: (message) => { 
+            toast.success("Successfully Signed In", message) 
+            navigate('/dashboard')
+
+          },
+          onError: (data: any) => { console.log(data) }
+        }
+      )
+    } catch (error: unknown) {
+      toast.error(String(error));
+    }
 
     
-    await API.METHODS.Post(API.ENDPOINTS.user.signup, { token: await user.getIdToken() ,...values } ,
-      { 
-        onSuccess: (message) => { 
-          console.log("Successfully Signed In", message) 
-          navigate('/dashboard')
-
-        },
-        onError: (data: any) => { console.log(data) }
-      }
-    )
 
     setProgressValue(100);
 

@@ -9,24 +9,28 @@ import { CenteredLayout } from './layouts/centered.tsx'
 import Dashboard from './pages/Dashboard.tsx'
 import Login from './pages/Login.tsx'
 import { SessionProvider } from './providers/SessionProvider.tsx'
+import { Toaster } from 'sonner'
 
 
 
 createRoot(document.getElementById('root')!).render(
-  <SessionProvider>
-    <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<PrimaryLayout />}>
-            <Route path='/' element={<Home />} />
-          </Route>
-          <Route element= {<CenteredLayout/>}>
-            <Route path='/login' element={<Login/>} />
-            <Route path='/sign-up' element={<SignUp/>}  />
-            <Route path='/dashboard' element={<Dashboard/>} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
-  </SessionProvider>
+  <>
+    <SessionProvider>
+      <ThemeProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<PrimaryLayout />}>
+              <Route path='/' element={<Home />} />
+              <Route path='/dashboard' element={<Dashboard/>} />
+            </Route>
+            <Route element= {<CenteredLayout/>}>
+              <Route path='/login' element={<Login/>} />
+              <Route path='/sign-up' element={<SignUp/>}  />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </SessionProvider>
+    <Toaster richColors/>
+  </>
 )
