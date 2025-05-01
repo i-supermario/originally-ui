@@ -51,7 +51,7 @@ export default function SignUp(){
   const firebaseAuthService = FirebaseAuthService.getInstance();
 
   const navigate = useNavigate();
-  const { email, sessionId, isLoading: isSessionLoading } = useSession();
+  const { email, sessionId, setSession, setEmail, isLoading: isSessionLoading } = useSession();
   const [loading, setLoading] = useState<boolean>(false || isSessionLoading);
   const [progressValue,setProgressValue] = useState<number>(0);
 
@@ -59,9 +59,10 @@ export default function SignUp(){
     setLoading(isSessionLoading);
   },[isSessionLoading])
 
+  // If active session found, navigate to dashboard
   useEffect(() => {
     if(email) navigate('/dashboard')
-  })
+  },[email])
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -87,19 +88,24 @@ export default function SignUp(){
     setProgressValue(10);
 
     const { email, password} = values;
-
     setProgressValue(25);
 
     try {
       const user = await firebaseAuthService.signUpUserWithEmailAndPassword({ email, password })
-
+      if(!user){
+        setLoading(false);
+        setProgressValue(0);
+        toast.error("User not found")
+        return;
+      }
       setProgressValue(65);
       await API.METHODS.POST(API.ENDPOINTS.user.signup, { token: await user.getIdToken() ,...values }, { withCredentials: true} ,
         { 
           onSuccess: (message) => { 
-            toast.success("Successfully Signed In", message) 
+            toast.success("Successfully Signed In", message)
+            setEmail(message.email); 
+            // setSession({ email: message.email, sessionId: message.sessionId })
             navigate('/dashboard')
-
           },
           onError: (data: any) => { console.log(data) }
         }
@@ -108,11 +114,7 @@ export default function SignUp(){
       toast.error(String(error));
     }
 
-    
-
     setProgressValue(100);
-
-
     setLoading(false)
 
   }

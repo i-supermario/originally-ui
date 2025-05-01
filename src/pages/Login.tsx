@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthSevice";
+import { useSession } from "@/providers/SessionProvider";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -22,13 +24,13 @@ const FormSchema = z.object({
       message: "Password must be atleast 8 characters"
     }
   )
-
 })
 
 export default function Login(){
 
   const firebaseAuthService = FirebaseAuthService.getInstance();
   const [loading, setLoading] = useState<boolean>(false);
+  const { setSession, setEmail } = useSession();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -43,28 +45,36 @@ export default function Login(){
     return <>Loading</>
   }
 
-  
-
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
 
     setLoading(true)
-
     const { email, password} = values;
+    try {
+      const user = await firebaseAuthService.loginWithEmailAndPassword({ email, password })
 
-    const user = await firebaseAuthService.loginWithEmailAndPassword({ email, password })
-    
-    await API.METHODS.POST(API.ENDPOINTS.user.login, { token: await user.getIdToken() ,...values } ,
-      { 
-        onSuccess: (message) => { 
-          console.log("Successfully Logged In", message) 
-          navigate('/dashboard')
-
-        },
-        onError: (data: any) => { console.log(data) }
+      if(!user){
+        setLoading(false);
+        toast.error("User not found");
+        return;
       }
-    )
+      
+      await API.METHODS.POST(API.ENDPOINTS.user.login, { token: await user.getIdToken() ,...values } , { withCredentials: true },
+        { 
+          onSuccess: (message) => { 
+            toast.success("Successfully Logged In", message);
+            setEmail(message.email);
+            // setSession({ email: message.email, sessionId: message.sessionId });
+            navigate('/dashboard');
+          },
+          onError: (data: any) => { toast.error(data); }
+        }
+      )
+    } catch (error) {
+      toast.error(String(error));
+    }
 
     setLoading(false)
+    return;
 
   }
 

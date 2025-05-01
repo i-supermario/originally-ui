@@ -3,10 +3,19 @@ import { Menu } from "lucide-react";
 import { Link } from "react-router";
 import Logo from "./logo";
 import { useSession } from "@/providers/SessionProvider";
+import { API } from "@/api";
 
 export default function Header() {
 
-  const { sessionId, clearSession } = useSession();
+  const { email, clearSession } = useSession();
+  const isSessionActive = email ? true : false;
+
+  const logoutUser = async () => {
+    await API.METHODS.POST(API.ENDPOINTS.user.logout, { email: email }, { withCredentials: true }, {
+      onSuccess: () => { clearSession(); },
+      onError: () => {},
+    })
+  }
 
   return (
     <header className="bg-background shadow-md">
@@ -22,9 +31,9 @@ export default function Header() {
           </Link>
         </nav>
         {
-          sessionId ? 
+          isSessionActive ? 
           <div>
-            <Button className="text-black" variant="outline" onClick={() => { clearSession() }}>
+            <Button className="text-black" variant="outline" onClick={() => { logoutUser() }}>
               Logout
             </Button>
           </div>

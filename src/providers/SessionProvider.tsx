@@ -1,18 +1,22 @@
 import { API } from "@/api";
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
+import React, { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 
 type ISessionContext = {
   email: string
   sessionId: string
   isLoading: boolean
   clearSession: () => void
+  setEmail: React.Dispatch<React.SetStateAction<string>>
+  setSession: (params: { email: string, sessionId: string }) => void
 }
 
 const defaultValues: ISessionContext = {
   email: "",
   sessionId: "",
   isLoading: true,
-  clearSession: () => {}
+  clearSession: () => {},
+  setEmail: () => {},
+  setSession: (params: { email: string, sessionId: string }) => {}
 }
 
 const SessionContext = createContext<ISessionContext>(defaultValues);
@@ -23,31 +27,36 @@ function SessionProvider({children}: PropsWithChildren){
   const [sessionId, setSessionId] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const clearSession = () => { 
-    setSessionId("")
-    
+    setSessionId("");
+    setEmail("");
+  }
+
+  const setSession = (params: { email: string, sessionId: string }) => {
+    setEmail(email);
+    setSessionId(sessionId);
   }
 
   useEffect(() => {
-        async function loadSessionInfo(){
-          await API.METHODS.GET(`${API.ENDPOINTS.session.userSessionInfo}`, { withCredentials: true } ,{
-            onSuccess: (data: ISessionContext ) => 
-              { 
-                console.log(data);
-                setEmail(data.email); 
-                setSessionId(data.sessionId) 
-                setIsLoading(false);
-              },
-            onError: () => {  }
-          })
-        }
+    async function loadSessionInfo(){
+      await API.METHODS.GET(`${API.ENDPOINTS.session.userSessionInfo}`, { withCredentials: true } ,{
+        onSuccess: (data: ISessionContext ) => 
+          { 
+            // console.log(data);
+            // setEmail(data.email); 
+            setSessionId(data.sessionId) 
+            setIsLoading(false);
+          },
+        onError: () => {  }
+      })
+    }
 
-        loadSessionInfo();
+    loadSessionInfo();
 
-  },[])
+  },[email])
 
   return (
     <>
-      <SessionContext.Provider value={{email, sessionId, isLoading, clearSession}} >
+      <SessionContext.Provider value={{email, sessionId, isLoading, clearSession, setEmail, setSession}} >
         {children}
       </SessionContext.Provider>
     </>
