@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Logo from "./logo";
 import { useSession } from "@/providers/SessionProvider";
 import { API } from "@/api";
@@ -9,10 +9,14 @@ export default function Header() {
 
   const { email, clearSession } = useSession();
   const isSessionActive = email ? true : false;
+  const navigate = useNavigate();
 
   const logoutUser = async () => {
     await API.METHODS.POST(API.ENDPOINTS.user.logout, { email: email }, { withCredentials: true }, {
-      onSuccess: () => { clearSession(); },
+      onSuccess: () => { 
+        clearSession();
+        navigate('/'); 
+      },
       onError: () => {},
     })
   }
@@ -29,6 +33,10 @@ export default function Header() {
           <Link to="/about" className="text-foreground hover:text-primary">
             about
           </Link>
+          <Link to="/about" className="text-foreground hover:text-primary">
+            create group
+          </Link>
+
         </nav>
         {
           isSessionActive ? 

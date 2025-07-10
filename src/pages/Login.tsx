@@ -2,6 +2,7 @@ import { API } from "@/api";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthSevice";
 import { useSession } from "@/providers/SessionProvider";
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -31,6 +32,7 @@ export default function Login(){
   const firebaseAuthService = FirebaseAuthService.getInstance();
   const [loading, setLoading] = useState<boolean>(false);
   const { setSession, setEmail } = useSession();
+  const [progressValue,setProgressValue] = useState<number>(0);
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -42,13 +44,14 @@ export default function Login(){
   })
 
   if(loading){
-    return <>Loading</>
+    return <div className="w-screen px-80"><Progress value={progressValue} /></div>
   }
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
 
     setLoading(true)
     const { email, password} = values;
+    setProgressValue(10);
     try {
       const user = await firebaseAuthService.loginWithEmailAndPassword({ email, password })
 
@@ -57,6 +60,7 @@ export default function Login(){
         toast.error("User not found");
         return;
       }
+      setProgressValue(50);
       
       await API.METHODS.POST(API.ENDPOINTS.user.login, { token: await user.getIdToken() ,...values } , { withCredentials: true },
         { 
@@ -72,6 +76,7 @@ export default function Login(){
     } catch (error) {
       toast.error(String(error));
     }
+    setProgressValue(90);
 
     setLoading(false)
     return;
