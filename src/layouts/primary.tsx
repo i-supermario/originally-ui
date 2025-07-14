@@ -9,7 +9,9 @@ export default function PrimaryLayout(){
         className="flex flex-col grow"
       >
         <Header/>
-        <Outlet/>
+        <div className="py-72 px-44">
+          <Outlet/>
+        </div>
         <Footer/>
       </div>
     </>

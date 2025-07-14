@@ -22,7 +22,7 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-background shadow-md">
+    <header className="bg-background shadow-md absolute top-0 left-0 w-full">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
         <Logo />
 
@@ -30,10 +30,7 @@ export default function Header() {
           <Link to="/" className="text-foreground hover:text-primary">
             home
           </Link>
-          <Link to="/about" className="text-foreground hover:text-primary">
-            about
-          </Link>
-          <Link to="/about" className="text-foreground hover:text-primary">
+          <Link to="/dashboard" className="text-foreground hover:text-primary">
             create group
           </Link>
 

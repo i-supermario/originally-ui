@@ -26,6 +26,8 @@ function SessionProvider({children}: PropsWithChildren){
   const [email, setEmail] = useState<string>("");
   const [sessionId, setSessionId] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  console.log(email)
+  console.log(sessionId)
   const clearSession = () => { 
     setSessionId("");
     setEmail("");
@@ -42,7 +44,7 @@ function SessionProvider({children}: PropsWithChildren){
         onSuccess: (data: ISessionContext ) => 
           { 
             // console.log(data);
-            // setEmail(data.email); 
+            setEmail(data.email); 
             setSessionId(data.sessionId) 
             setIsLoading(false);
           },
