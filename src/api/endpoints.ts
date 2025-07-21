@@ -6,5 +6,10 @@ export const ENDPOINTS = {
   },
   session: {
     userSessionInfo: "/session/user-info"
+  },
+  group: {
+    create: "/group/create",
+    add: (groupId: string) => `/group/${groupId}/add`,
+    remove: (groupId: string) => `/group/${groupId}/remove`,
   }
 }

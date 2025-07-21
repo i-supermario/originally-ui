@@ -34,7 +34,7 @@ export const PostRequest = async <T>(
     }
     onSuccess(response.data);
   } catch (error: any) {
-    const err = new Error(error?.response?.data?.message || 'Something went wrong');
+    const err = new Error(error?.response?.data?.message || error || 'Something went wrong');
     if (onError) onError(err);
     else console.error(err);
   }

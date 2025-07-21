@@ -31,7 +31,7 @@ export default function Login(){
 
   const firebaseAuthService = FirebaseAuthService.getInstance();
   const [loading, setLoading] = useState<boolean>(false);
-  const { setSession, setEmail } = useSession();
+  const { setSessionId, setUserId, setEmail } = useSession();
   const [progressValue,setProgressValue] = useState<number>(0);
   const navigate = useNavigate();
 
@@ -67,6 +67,8 @@ export default function Login(){
           onSuccess: (message) => { 
             toast.success("Successfully Logged In", message);
             setEmail(message.email);
+            setSessionId(message.sessionId);
+            setUserId(message.userId)
             // setSession({ email: message.email, sessionId: message.sessionId });
             navigate('/dashboard');
           },

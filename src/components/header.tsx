@@ -9,6 +9,7 @@ export default function Header() {
 
   const { email, clearSession } = useSession();
   const isSessionActive = email ? true : false;
+  console.log(isSessionActive);
   const navigate = useNavigate();
 
   const logoutUser = async () => {
@@ -22,7 +23,7 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-background shadow-md absolute top-0 left-0 w-full">
+    <header className="bg-background shadow-md backdrop-blur-md absolute top-0 left-0 right-0 w-full z-50">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
         <Logo />
 

@@ -6,10 +6,11 @@ import PrimaryLayout from './layouts/primary.tsx'
 import { ThemeProvider } from './utils/Theme.tsx'
 import SignUp from './pages/SignUp.tsx'
 import { CenteredLayout } from './layouts/centered.tsx'
-import Dashboard from './pages/Dashboard.tsx'
 import Login from './pages/Login.tsx'
 import { SessionProvider } from './providers/SessionProvider.tsx'
 import { Toaster } from 'sonner'
+import Dashboard from './pages/dashboard/index.tsx'
+import AuthenticatedLayout from './layouts/authenticated.tsx'
 
 
 
@@ -21,7 +22,9 @@ createRoot(document.getElementById('root')!).render(
           <Routes>
             <Route element={<PrimaryLayout />}>
               <Route path='/' element={<Home />} />
-              <Route path='/dashboard' element={<Dashboard/>} />
+              <Route element={<AuthenticatedLayout/>} >
+                <Route path='/dashboard' element={<Dashboard/>} />
+              </Route>
             </Route>
             <Route element= {<CenteredLayout/>}>
               <Route path='/login' element={<Login/>} />

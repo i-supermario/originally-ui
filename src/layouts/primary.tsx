@@ -6,12 +6,14 @@ export default function PrimaryLayout(){
   return(
     <>
       <div
-        className="flex flex-col grow"
+        className="flex flex-col h-full"
       >
         <Header/>
-        <div className="py-72 px-44">
-          <Outlet/>
-        </div>
+        <main className="overflow-y-auto">
+          <div className="py-36 px-44">
+            <Outlet/>
+          </div>
+        </main>
         <Footer/>
       </div>
     </>

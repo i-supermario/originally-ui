@@ -5,7 +5,7 @@ export default function Footer() {
   const { darkMode } = useTheme();
   
   return (
-    <footer className="overflow-hidden bg-background shadow-md py-4 absolute bottom-0 left-0 w-full">
+    <footer className="overflow-hidden bg-background shadow-md backdrop-blur-md py-4 absolute bottom-0 left-0 right-0 w-full">
       {/* Animated Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 opacity-10">
