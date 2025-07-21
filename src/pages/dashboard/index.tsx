@@ -1,7 +1,5 @@
-import { API } from "@/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -16,10 +14,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import { API } from "@/api";
 import { mockGroups } from "@/mock/group";
 import { useSession } from "@/providers/SessionProvider";
 import { GroupI } from "@/types/group";
-import { useState } from "react";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { toast } from "sonner";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
 
 
 export default function Dashboard(){
@@ -29,14 +42,9 @@ export default function Dashboard(){
       <div className="flex flex-col">
         <p className="text-2xl font-semibold">Your groups</p>
         <div className="flex py-6">
-          {/* <Button
-            variant="outline"
-          >
-            Create 
-          </Button> */}
           <CreateGroupPopup/>
         </div>
-        {/* <Separator className="my-4 bg-gray-300" /> */}
+        <Separator className="my-4 bg-gray-300" />
         <div>
           <GroupTable data={mockGroups} />
         </div>
@@ -45,67 +53,93 @@ export default function Dashboard(){
   )
 }
 
+
+
+const formSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+});
+
 export function CreateGroupPopup() {
-
   const { userId } = useSession();
-  const [formData, setFormData] = useState<{ name: string, descrioption: string }>({ name: '', descrioption: ''});
 
-  const createGroup = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+  });
 
-    if(!formData.name || !formData.descrioption) return;
-
-    const res = API.METHODS.POST(
-      API.ENDPOINTS.group.create, 
-      { ownerId: userId , ...formData},
-      {},
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    API.METHODS.POST(
+      API.ENDPOINTS.group.create,
+      { ownerId: userId, ...data },
+      { withCredentials: true },
       {
-        onSuccess: () => {},
-        onError: () => {}
+        onSuccess: (response) => toast.success(response.message),
+        onError: () => toast.error("Failed to create group"),
       }
-
-    )
-  }
+    );
+  };
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline">Create</Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 bg-white">
-        <div className="flex flex-col gap-4">
-          <div className="space-y-2">
-            <h4 className="leading-none font-medium">Create New Group</h4>
-          </div>
-          <div className="grid gap-2">
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="width">Name</Label>
-              <Input
-                id="width"
-                defaultValue="100%"
-                className="col-span-2 h-8"
+      <PopoverContent className=" bg-white">
+        <div className="space-y-4">
+          <h4 className="text-lg font-semibold">Create New Group</h4>
+
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Group name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="maxWidth">Description</Label>
-              <Input
-                id="maxWidth"
-                defaultValue="300px"
-                className="col-span-2 h-8"
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Group description" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          </div>
-          <div className="flex">
-            <Button variant="outline" onClick={() => createGroup()}>
-              Submit
-            </Button>
-          </div>
+              <PopoverClose asChild>
+                <Button variant="outline" type="submit" className="">
+                  Submit
+                </Button>
+              </PopoverClose>
+            </form>
+          </Form>
         </div>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
 
+
 export function GroupTable(params: { data: GroupI[] }) {
+
+  
 
   return (
     <Table>
