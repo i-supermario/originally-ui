@@ -72,7 +72,7 @@ export default function Login(){
             // setSession({ email: message.email, sessionId: message.sessionId });
             navigate('/dashboard');
           },
-          onError: (data: any) => { toast.error(data); }
+          onError: (data: any) => { toast.error(data.message); }
         }
       )
     } catch (error) {

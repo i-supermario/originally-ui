@@ -4,10 +4,11 @@ import { Link, useNavigate } from "react-router";
 import Logo from "./logo";
 import { useSession } from "@/providers/SessionProvider";
 import { API } from "@/api";
+import { Spinner } from "./ui/spinner";
 
 export default function Header() {
 
-  const { email, clearSession } = useSession();
+  const { email, clearSession, isLoading } = useSession();
   const isSessionActive = email ? true : false;
   console.log(isSessionActive);
   const navigate = useNavigate();
@@ -36,7 +37,9 @@ export default function Header() {
           </Link>
 
         </nav>
-        {
+        { 
+          isLoading ?
+          <div className="flex justify-center items-center"><Spinner size="sm" className="bg-black dark:bg-white" /></div> :
           isSessionActive ? 
           <div>
             <Button className="text-black" variant="outline" onClick={() => { logoutUser() }}>

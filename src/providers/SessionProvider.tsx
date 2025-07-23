@@ -49,31 +49,33 @@ function SessionProvider({children}: PropsWithChildren){
   }
 
   useEffect(() => {
-  async function loadSessionInfo() {
-    try {
-      await API.METHODS.GET(
-        `${API.ENDPOINTS.session.userSessionInfo}`,
-        { withCredentials: true },
-        {
-          onSuccess: (data: ISessionContext) => {
-            setUserId(data.userId);
-            setEmail(data.email);
-            setSessionId(data.sessionId);
-          },
-          onError: () => {
-            // clearSession(); // Optional: clear session on error
+    async function loadSessionInfo() {
+      try {
+        await API.METHODS.GET(
+          `${API.ENDPOINTS.session.userSessionInfo}`,
+          {},
+          { withCredentials: true }, // options
+          {
+            onSuccess: (data: ISessionContext) => {
+              setUserId(data.userId);
+              setEmail(data.email);
+              setSessionId(data.sessionId);
+            },
+            onError: () => {
+              // clearSession(); // Optional
+            },
           }
-        }
-      );
-    } catch (e) {
-      console.error("Failed to load session:", e);
-    } finally {
-      setIsLoading(false); // ✅ Only after session is fetched or failed
+        );
+      } catch (e) {
+        console.error('Failed to load session:', e);
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }
 
-  loadSessionInfo();
-}, []); 
+    loadSessionInfo();
+  }, []);
+
 
   return (
     <>

@@ -8,13 +8,19 @@ type Callbacks<T> = {
 
 export const GetRequest = async <T>(
   url: string,
+  queryParams: Record<string, any>, 
   options: AxiosRequestConfig,
   { onSuccess, onError }: Callbacks<T>
 ): Promise<void> => {
   try {
-    const response = await AxiosInstance.get<T>(url, { ...options } );
+    const response = await AxiosInstance.get<T>(url, {
+      ...options,
+      params: queryParams, 
+    });
+
     onSuccess(response.data);
   } catch (error: any) {
+    console.log(error)
     const err = new Error(error?.response?.data?.message || 'Something went wrong');
     if (onError) onError(err);
     else console.error(err);
@@ -23,8 +29,8 @@ export const GetRequest = async <T>(
 
 export const PostRequest = async <T>(
   url: string,
-  body: any,
-  options: AxiosRequestConfig,
+  body: any = {},
+  options: AxiosRequestConfig = {},
   { onSuccess, onError }: Callbacks<T>
 ): Promise<void> => {
   try {
@@ -39,4 +45,40 @@ export const PostRequest = async <T>(
     else console.error(err);
   }
 };
+
+export const DeleteRequest = async <T>(
+  url: string,
+  queryParams: Record<string, any> = {},
+  options: AxiosRequestConfig = {},
+  { onSuccess, onError }: Callbacks<T>
+): Promise<void> => {
+  try {
+    const response = await AxiosInstance.delete<T>(url, {
+      ...options,
+      params: queryParams,
+    });
+    onSuccess(response.data);
+  } catch (error: any) {
+    const err = new Error(error?.response?.data?.message || error || 'Something went wrong');
+    if (onError) onError(err);
+    else console.error(err);
+  }
+};
+
+export const PutRequest = async <T>(
+  url: string,
+  body: any = {},
+  options: AxiosRequestConfig = {},
+  { onSuccess, onError }: Callbacks<T>
+): Promise<void> => {
+  try {
+    const response = await AxiosInstance.put<T>(url, body, { ...options });
+    onSuccess(response.data);
+  } catch (error: any) {
+    const err = new Error(error?.response?.data?.message || error || 'Something went wrong');
+    if (onError) onError(err);
+    else console.error(err);
+  }
+};
+
 

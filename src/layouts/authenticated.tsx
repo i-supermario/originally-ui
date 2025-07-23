@@ -9,7 +9,7 @@ export default function AuthenticatedLayout(){
   const location = useLocation();
   
   if(isLoading){
-    return <Spinner size="sm" className="bg-black dark:bg-white" />
+    return <div className="flex justify-center items-center"><Spinner size="sm" className="bg-black dark:bg-white" /></div>
   }
 
   if(!userId) {
