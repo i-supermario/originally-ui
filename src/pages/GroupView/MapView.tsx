@@ -90,7 +90,7 @@ export default function MapView({ groupId, userId }: { groupId: string; userId: 
           position={[member.lat, member.lng]}
           icon={userIcon}
         >
-          <Popup>{member.userId}</Popup>
+          <Popup>{member.userId == userId ? "You" : member.userId}</Popup>
         </Marker>
       ))}
     </MapContainer>
