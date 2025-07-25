@@ -10,7 +10,7 @@ export default function Header() {
 
   const { email, clearSession, isLoading } = useSession();
   const isSessionActive = email ? true : false;
-  console.log(isSessionActive);
+  // console.log(isSessionActive);
   const navigate = useNavigate();
 
   const logoutUser = async () => {

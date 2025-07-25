@@ -65,7 +65,7 @@ export function GroupRow({ group, onRefresh }: { group: any; onRefresh: () => vo
   };
 
   const handleGroupTabClick = () => {
-    navigate('/group-view')
+    navigate(`/group-view/${group._id}`)
   }
 
 
@@ -88,8 +88,8 @@ export function GroupRow({ group, onRefresh }: { group: any; onRefresh: () => vo
                 {group.memberDetails.length} Member{group.memberDetails.length > 1 ? "s" : ""}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-72 max-h-64 overflow-auto">
-              <ul className="text-sm space-y-2">
+            <PopoverContent className="bg-white w-72 max-h-64 overflow-auto">
+              <div className="text-sm space-y-2">
                 {group.memberDetails.map((member: any, index: number) => (
                   <li key={index} className="flex items-center justify-between">
                     <div>
@@ -106,7 +106,7 @@ export function GroupRow({ group, onRefresh }: { group: any; onRefresh: () => vo
                     </Button>
                   </li>
                 ))}
-              </ul>
+              </div>
             </PopoverContent>
           </Popover>
         ) : (

@@ -9,6 +9,7 @@ export const ENDPOINTS = {
   },
   group: {
     create: "/group/create",
+    get: (groupId: string) => `/group/${groupId}`,
     add: (groupId: string) => `/group/${groupId}/add-member`,
     remove: (groupId: string, memberId: string) => `/group/${groupId}/remove-member/${memberId}`,
     getAll: (userId: string) => `/group/get-all/${userId}`,

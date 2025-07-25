@@ -2,9 +2,9 @@ import { API } from "@/api";
 import { useSession } from "@/providers/SessionProvider";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { GroupTable } from "./group-view/GroupTable";
-import { CreateGroupPopup } from "./CreateGroupPopup";
 import { Separator } from "@/components/ui/separator";
+import { CreateGroupPopup } from "./CreateGroupPopup";
+import { GroupTable } from "./group-view/GroupTable";
 
 export default function Dashboard() {
   const [groups, setGroups] = useState([]);

@@ -9,8 +9,9 @@ import { CenteredLayout } from './layouts/centered.tsx'
 import Login from './pages/Login.tsx'
 import { SessionProvider } from './providers/SessionProvider.tsx'
 import { Toaster } from 'sonner'
-import Dashboard from './pages/dashboard/index.tsx'
+import Dashboard from './pages/Dashboard/index.tsx'
 import AuthenticatedLayout from './layouts/authenticated.tsx'
+import GroupView from './pages/GroupView/index.tsx'
 
 
 
@@ -24,6 +25,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path='/' element={<Home />} />
               <Route element={<AuthenticatedLayout/>} >
                 <Route path='/dashboard' element={<Dashboard/>} />
+                <Route path="/group-view/:groupId" element={<GroupView />} />
               </Route>
             </Route>
             <Route element= {<CenteredLayout/>}>

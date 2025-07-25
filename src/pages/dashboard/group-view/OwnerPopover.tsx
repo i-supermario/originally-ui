@@ -6,7 +6,7 @@ export function OwnerPopover({ owner }: { owner: any }) {
       <PopoverTrigger asChild>
         <p className="underline cursor-pointer">{owner?.firstName || "Owner"}</p>
       </PopoverTrigger>
-      <PopoverContent className="w-72">
+      <PopoverContent className="bg-white w-72">
         <div className="text-sm space-y-1">
           <div><strong>Name:</strong> {owner?.firstName} {owner?.lastName}</div>
           <div><strong>Email:</strong> {owner?.email}</div>

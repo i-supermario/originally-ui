@@ -5,7 +5,7 @@ import { Spinner } from "@/components/ui/spinner";
 export default function AuthenticatedLayout(){
 
   const { userId, isLoading } = useSession();
-  console.log(userId)
+  // console.log(userId)
   const location = useLocation();
   
   if(isLoading){
