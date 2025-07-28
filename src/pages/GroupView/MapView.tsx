@@ -61,7 +61,10 @@ export default function MapView({ groupId, userId }: { groupId: string; userId: 
       locations.forEach((loc) => {
         locationMap[loc.userId] = loc;
       });
-      setMembers(locationMap);
+      setMembers((prev) => ({
+        ...prev,
+        ...locationMap,
+      }));
     });
 
     return () => {
