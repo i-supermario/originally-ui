@@ -1,15 +1,41 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router'
+import Home from './pages/Home.tsx'
+import PrimaryLayout from './layouts/primary.tsx'
+import { ThemeProvider } from './utils/Theme.tsx'
+import SignUp from './pages/SignUp.tsx'
+import { CenteredLayout } from './layouts/centered.tsx'
+import Login from './pages/Login.tsx'
+import { SessionProvider } from './providers/SessionProvider.tsx'
+import { Toaster } from 'sonner'
+import Dashboard from './pages/Dashboard/index.tsx'
+import AuthenticatedLayout from './layouts/authenticated.tsx'
+import GroupView from './pages/GroupView/index.tsx'
 
 
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-    <Routes>
-      <Route path='/' element={<App/>}/>
-    </Routes>
-  </BrowserRouter>
+  <>
+    <SessionProvider>
+      <ThemeProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<PrimaryLayout />}>
+              <Route path='/' element={<Home />} />
+              <Route element={<AuthenticatedLayout/>} >
+                <Route path='/dashboard' element={<Dashboard/>} />
+                <Route path="/group-view/:groupId" element={<GroupView />} />
+              </Route>
+            </Route>
+            <Route element= {<CenteredLayout/>}>
+              <Route path='/login' element={<Login/>} />
+              <Route path='/sign-up' element={<SignUp/>}  />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </SessionProvider>
+    <Toaster richColors/>
+  </>
 )
