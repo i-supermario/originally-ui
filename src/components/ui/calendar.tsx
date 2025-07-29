@@ -12,16 +12,18 @@ function Calendar({
 }: React.ComponentProps<typeof DayPicker>) {
   return (
     <DayPicker
+      captionLayout="dropdown"
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
         months: "flex flex-col gap-2",
         month: "flex flex-col gap-4",
         month_caption: "flex justify-center pt-1 relative items-center w-full",
-        caption_label: "text-sm font-medium",
+        
+        caption_label: "hidden",
         nav: "flex items-center gap-1",
-        button_previous: "absolute left-1",
-        button_next: "absolute right-1",
+        button_previous: "hidden",
+        button_next: "hidden",
         month_grid: "w-full border-collapse space-x-1",
         weekday:
           "text-muted-foreground rounded-md w-8 font-normal font-semibold text-[1.1rem]",
@@ -48,14 +50,14 @@ function Calendar({
         hidden: "invisible",
         ...classNames,
       }}
-      components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("size-4", className)} {...props} />
-        ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("size-4", className)} {...props} />
-        ),
-      }}
+      // components={{
+      //   IconLeft: ({ className, ...props }) => (
+      //     <ChevronLeft className={cn("size-4", className)} {...props} />
+      //   ),
+      //   IconRight: ({ className, ...props }) => (
+      //     <ChevronRight className={cn("size-4", className)} {...props} />
+      //   ),
+      // }}
       {...props}
     />
   )
