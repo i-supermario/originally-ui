@@ -1,17 +1,17 @@
 import { API } from "@/api";
 import { useSession } from "@/providers/SessionProvider";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { CreateGroupPopup } from "./CreateGroupPopup";
 import { GroupTable } from "./group-view/GroupTable";
 
-export default function Dashboard() {
+export default function GroupDashboard() {
   const [groups, setGroups] = useState([]);
-  console.log(groups)
+  // console.log(groups)
   const { userId } = useSession();
 
-  const fetchGroups = () => {
+  const fetchGroups = useCallback(() => {
     API.METHODS.GET(
       API.ENDPOINTS.group.getAll(userId),
       {},
@@ -27,7 +27,7 @@ export default function Dashboard() {
         },
       }
     );
-  };
+  },[userId])
 
   useEffect(() => {
     fetchGroups();

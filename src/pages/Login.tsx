@@ -70,7 +70,7 @@ export default function Login(){
             setSessionId(message.sessionId);
             setUserId(message.userId)
             // setSession({ email: message.email, sessionId: message.sessionId });
-            navigate('/dashboard');
+            navigate('/groups');
           },
           onError: (data: any) => { toast.error(data.message); }
         }

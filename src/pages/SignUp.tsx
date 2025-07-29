@@ -57,7 +57,7 @@ export default function SignUp(){
 
   // If active session found, navigate to dashboard
   useEffect(() => {
-    if(email) navigate('/dashboard')
+    if(email) navigate('/groups')
   },[email])
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -101,7 +101,7 @@ export default function SignUp(){
             toast.success("Successfully Signed In", message)
             setEmail(message.email); 
             // setSession({ email: message.email, sessionId: message.sessionId })
-            navigate('/dashboard')
+            navigate('/groups')
           },
           onError: (data: any) => { console.log(data) }
         }
