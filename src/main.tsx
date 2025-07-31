@@ -13,6 +13,7 @@ import AuthenticatedLayout from './layouts/authenticated.tsx'
 import GroupView from './pages/GroupView/index.tsx'
 import GroupDashboard from './pages/GroupDashboard/index.tsx'
 import TaskDashboard from './pages/TaskDashboard/index.tsx'
+import TaskView from './pages/TaskView/index.tsx'
 
 
 
@@ -28,6 +29,7 @@ createRoot(document.getElementById('root')!).render(
                 <Route path='/groups' element={<GroupDashboard/>} />
                 <Route path='/groups/:groupId' element={<GroupView />} />
                 <Route path='/tasks' element={<TaskDashboard/>} />
+                <Route path='/tasks/:taskId' element={<TaskView/>} />
               </Route>
             </Route>
             <Route element= {<CenteredLayout/>}>

@@ -10,8 +10,14 @@ export const ENDPOINTS = {
   group: {
     create: "/group/create",
     get: (groupId: string) => `/group/${groupId}`,
-    add: (groupId: string) => `/group/${groupId}/add-member`,
+    addMember: (groupId: string) => `/group/${groupId}/add-member`,
     remove: (groupId: string, memberId: string) => `/group/${groupId}/remove-member/${memberId}`,
     getAll: (userId: string) => `/group/get-all/${userId}`,
+  },
+  task: {
+    create: "/assignment/create",
+    get: (taskId: string) => `/assignment/${taskId}`,
+    addTask: (taskId: string) => `/assignment/${taskId}/add-task`,
+    getAll: (userId: string) => `/assignment/get-all/${userId}`
   }
 }

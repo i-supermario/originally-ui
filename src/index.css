@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 @plugin "tailwindcss-animate";
+@import 'mapbox-gl/dist/mapbox-gl.css';
+@import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+
+
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Retro font */
 
