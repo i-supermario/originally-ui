@@ -28,8 +28,8 @@ createRoot(document.getElementById('root')!).render(
               <Route element={<AuthenticatedLayout/>} >
                 <Route path='/groups' element={<GroupDashboard/>} />
                 <Route path='/groups/:groupId' element={<GroupView />} />
-                <Route path='/tasks' element={<TaskDashboard/>} />
-                <Route path='/tasks/:taskId' element={<TaskView/>} />
+                <Route path='/assignments' element={<TaskDashboard/>} />
+                <Route path='/assignments/:assignmentId' element={<TaskView/>} />
               </Route>
             </Route>
             <Route element= {<CenteredLayout/>}>

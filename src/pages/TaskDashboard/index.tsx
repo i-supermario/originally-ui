@@ -2,8 +2,8 @@ import { API } from "@/api";
 import { useSession } from "@/providers/SessionProvider";
 import { useCallback, useEffect, useState } from "react"
 import { toast } from "sonner";
-import { TaskCard } from "./TaskCard";
-import { CreateTaskPopover } from "./CreateTaskPopup";
+import { CreateAssignmentPopover } from "./CreateAssignmentPopup";
+import AssignmentCard from "./AssignmentCard";
 
 export enum TaskStatus {
   ACTIVE = 'ACTIVE',
@@ -11,6 +11,7 @@ export enum TaskStatus {
   FINISHED = 'FINISHED',
 }
 export interface Task {
+  _id: string;
   name: string;
   description: string;
   status: TaskStatus;
@@ -26,19 +27,19 @@ export interface Assignment {
   tasks: Task[]
 }
 
-export default function TaskDashboard(){
+export default function AssignmentDashboard() {
 
-  const [tasks, setTasks] = useState<Assignment[]>([]);
+  const [assignments, setAssignment] = useState<Assignment[]>([]);
   const { userId } = useSession();
 
-  const fetchTasks = useCallback(() => {
+  const fetchAssignments = useCallback(() => {
     API.METHODS.GET(
-      API.ENDPOINTS.task.getAll(userId),
+      API.ENDPOINTS.assignment.getAll(userId),
       {},
       { withCredentials: true },
       {
         onSuccess: (response) => {
-          setTasks(response.data);
+          setAssignment(response.data);
           toast.success("Fetched groups successfully");
         },
         onError: (error) => {
@@ -50,19 +51,19 @@ export default function TaskDashboard(){
   }, [userId])
 
   useEffect(() => {
-    fetchTasks()
-  },[])
-  
-  
-  return(
+    fetchAssignments()
+  }, [])
+
+
+  return (
     <>
       <div className="space-y-4 p-4">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-semibold">Your Tasks</h2>
-          <CreateTaskPopover onSuccess={fetchTasks} />
+          <CreateAssignmentPopover onSuccess={fetchAssignments} />
         </div>
-        <TaskList tasks={tasks} />
-    </div>
+        <TaskList tasks={assignments} />
+      </div>
     </>
   )
 }
@@ -75,7 +76,7 @@ function TaskList({ tasks }: { tasks: Assignment[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {tasks.map((task) => (
-        <TaskCard key={task._id} task={task} />
+        <AssignmentCard key={task._id} assignment={task} />
       ))}
     </div>
   )

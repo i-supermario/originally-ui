@@ -11,10 +11,10 @@ type Props = {
   lat: number;
   lng: number;
   onSuccess: () => void;
-  taskId: string
+  assignmentId: string
 };
 
-export default function AddTaskPopup({ lat, lng, onSuccess, taskId }: Props) {
+export default function AddTaskPopup({ lat, lng, onSuccess, assignmentId }: Props) {
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -31,7 +31,7 @@ export default function AddTaskPopup({ lat, lng, onSuccess, taskId }: Props) {
     if (!form.name || !form.latitude || !form.longitude) return;
 
     await API.METHODS.PUT(
-      API.ENDPOINTS.task.addTask(taskId), // Replace or pass taskId via props
+      API.ENDPOINTS.assignment.addTask(assignmentId), // Replace or pass taskId via props
       { ...form },
       { withCredentials: true },
       {

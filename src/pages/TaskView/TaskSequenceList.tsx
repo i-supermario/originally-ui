@@ -29,8 +29,6 @@ function TaskSequenceItem({ task, index }: Props) {
     switch (task.status) {
       case "FINISHED":
         return <CheckCircle2 className="text-green-500" size={20} />
-      case "PROGRESSING":
-        return <Clock className="text-yellow-500" size={20} />
       case "ACTIVE":
       default:
         return <Circle className="text-gray-400" size={20} />

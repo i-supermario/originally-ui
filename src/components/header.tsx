@@ -35,7 +35,7 @@ export default function Header() {
           <Link to="/groups" className="text-foreground hover:text-primary">
             create group
           </Link>
-          <Link to="/tasks" className="text-foreground hover:text-primary">
+          <Link to="/assignments" className="text-foreground hover:text-primary">
             create task
           </Link>
         </nav>

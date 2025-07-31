@@ -25,7 +25,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "@/providers/SessionProvider";
-import { DatePicker } from "@/components/datepicker";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Title is required" }),
@@ -33,7 +32,7 @@ const formSchema = z.object({
   dueDate: z.date({ required_error: "Due date is required" }).min(new Date()),
 });
 
-export function CreateTaskPopover({ onSuccess }: { onSuccess: () => void }) {
+export function CreateAssignmentPopover({ onSuccess }: { onSuccess: () => void }) {
 
   const { userId } = useSession();
 
@@ -49,7 +48,7 @@ export function CreateTaskPopover({ onSuccess }: { onSuccess: () => void }) {
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     console.log(data)
     API.METHODS.POST(
-      API.ENDPOINTS.task.create,
+      API.ENDPOINTS.assignment.create,
       {
         ownerId: userId,
         ...form.getValues()
@@ -69,13 +68,13 @@ export function CreateTaskPopover({ onSuccess }: { onSuccess: () => void }) {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline">
-          New Task
+          New Assignment
           <Plus className="size-4 mr-2" />
         </Button>
       </PopoverTrigger>
 
       <PopoverContent className="w-96 bg-white space-y-4">
-        <h4 className="text-lg font-semibold">Create Task</h4>
+        <h4 className="text-lg font-semibold">Create Assignment</h4>
 
         <Form {...form}>
           <form
@@ -152,7 +151,7 @@ export function CreateTaskPopover({ onSuccess }: { onSuccess: () => void }) {
 
             <PopoverClose asChild>
               <Button type="submit" variant="outline">
-                Create Task
+                Create Assignment
               </Button>
             </PopoverClose>
           </form>

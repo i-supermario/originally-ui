@@ -12,27 +12,27 @@ import MapboxMap from "@/pages/TaskView/MapView"
 import GeocodingMapView from "@/pages/TaskView/MapView"
 
 export default function TaskView() {
-  const { taskId } = useParams()
+  const { assignmentId } = useParams()
   const [assignment, setAssignment] = useState<Assignment | null>(null)
 
   const fetchAssignment = useCallback(async () => {
-    if (!taskId) return
+    if (!assignmentId) return
     try {
-      await API.METHODS.GET(API.ENDPOINTS.task.get(taskId), {}, { withCredentials: true }, {
+      await API.METHODS.GET(API.ENDPOINTS.assignment.get(assignmentId), {}, { withCredentials: true }, {
         onSuccess: (res) => setAssignment(res.data),
         onError: (err) => toast.error(err.message),
       })
     } catch {
       toast.error("Failed to fetch task")
     }
-  }, [taskId])
+  }, [assignmentId])
 
   useEffect(() => {
     fetchAssignment()
   }, [])
 
 
-  if (!taskId || !assignment) {
+  if (!assignmentId || !assignment) {
     return (
       <div className="flex justify-center items-center h-full">
         <Spinner size="sm" className="bg-black dark:bg-white" />
@@ -58,7 +58,7 @@ export default function TaskView() {
           <TaskSequenceList tasks={assignment.tasks} />
         </CardContent>
       </Card>
-      <GeocodingMapView taskId={taskId} tasks={assignment.tasks} onTaskAdded={fetchAssignment} />
+      <GeocodingMapView assignmentId={assignmentId} tasks={assignment.tasks} onTaskAddedOrUpdated={fetchAssignment} />
     </div>
   )
 }

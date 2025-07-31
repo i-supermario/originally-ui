@@ -1,46 +1,66 @@
 import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L, { LatLngExpression } from "leaflet";
 import axios from "axios";
 import AddTaskPopup from "./AddTaskPopup";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-
-type TaskLocation = {
-  name: string;
-  latitude: number;
-  longitude: number;
-};
+import { Task } from "../TaskDashboard";
+import TaskPopupCard from "./TaskPopupCard";
+import L from "leaflet";
 
 type Props = {
-  taskId: string;
-  tasks: TaskLocation[];
-  onTaskAdded: () => void;
+  assignmentId: string;
+  tasks: Task[];
+  onTaskAddedOrUpdated: () => void;
 };
 
-export default function GeocodingMapView({ taskId,tasks, onTaskAdded }: Props) {
+const userIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/149/149071.png", // replace with your own
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -30],
+  className: 'user-marker-icon'
+});
+
+
+export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpdated }: Props) {
   const [showAddedTasks, setShowAddedTasks] = useState<boolean>(false);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState<
     { name: string; lat: number; lng: number }[]
   >([]);
-  const [userLocation, setUserLocation] = useState<LatLngExpression | null>(null);
+  const [userLocation, setUserLocation] = useState<number[] | null>();
   const mapRef = useRef<any>(null);
 
   // Get user's current location
   useEffect(() => {
     if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
+
+    const watchId = navigator.geolocation.watchPosition(
       (pos) => {
-        setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+        const newLocation = [pos.coords.latitude, pos.coords.longitude];
+        setUserLocation(newLocation);
+
+        if (mapRef.current) {
+          mapRef.current.setView(newLocation, mapRef.current.getZoom());
+        }
       },
       (err) => {
-        console.error("Failed to get location", err);
-        // fallback to center of India
-        setUserLocation([20.5937, 78.9629]);
+        console.error("Failed to get live location", err);
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 10000,
+        timeout: 5000,
       }
     );
+
+    // Cleanup on unmount
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
   }, []);
+
 
   const handleSearch = async () => {
     if (!search) return;
@@ -97,7 +117,15 @@ export default function GeocodingMapView({ taskId,tasks, onTaskAdded }: Props) {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution="&copy; OpenStreetMap contributors"
           />
-
+          <Marker
+            key="user-location"
+            position={userLocation}
+            icon={userIcon}
+          >
+            <Popup>
+              <p className="font-bold">YOU!</p>
+            </Popup>
+          </Marker>
           {
             showAddedTasks ?
             tasks.map((task, idx) => (
@@ -106,9 +134,7 @@ export default function GeocodingMapView({ taskId,tasks, onTaskAdded }: Props) {
                 position={[task.latitude, task.longitude]}
               >
                 <Popup>
-                  <strong>
-                    {idx + 1}. {task.name}
-                  </strong>
+                  <TaskPopupCard sequenceNo={idx + 1} assignmentId={assignmentId} task={task} userLat={userLocation[0]} userLng={userLocation[1]} onMarkFinished={onTaskAddedOrUpdated} />
                 </Popup>
               </Marker>
             ))
@@ -119,9 +145,9 @@ export default function GeocodingMapView({ taskId,tasks, onTaskAdded }: Props) {
                   <AddTaskPopup
                     lat={result.lat}
                     lng={result.lng}
-                    taskId={taskId}
+                    assignmentId={assignmentId}
                     onSuccess={() => {
-                      onTaskAdded()
+                      onTaskAddedOrUpdated()
                     }}
                   />
                 </Popup>
