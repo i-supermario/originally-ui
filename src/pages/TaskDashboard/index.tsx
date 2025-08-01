@@ -20,6 +20,8 @@ export interface Task {
 }
 export interface Assignment {
   _id: string
+  ownerId: string
+  assigneeId: string
   name: string
   description: string
   status: string
@@ -40,6 +42,7 @@ export default function AssignmentDashboard() {
       {
         onSuccess: (response) => {
           setAssignment(response.data);
+          console.log(response)
           toast.success("Fetched groups successfully");
         },
         onError: (error) => {

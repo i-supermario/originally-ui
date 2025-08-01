@@ -7,9 +7,8 @@ import { API } from "@/api"
 import { Assignment } from "../TaskDashboard"
 import { Spinner } from "@/components/ui/spinner"
 import TaskSequenceList from "./TaskSequenceList"
-import AddTaskPopover from "./AddTaskPopup"
-import MapboxMap from "@/pages/TaskView/MapView"
 import GeocodingMapView from "@/pages/TaskView/MapView"
+import AssignUserPopover from "./AssignUserPopup"
 
 export default function TaskView() {
   const { assignmentId } = useParams()
@@ -49,16 +48,17 @@ export default function TaskView() {
               <CardTitle>{assignment.name}</CardTitle>
               <p className="text-sm text-muted-foreground">{assignment.description}</p>
               <p className="text-xs">Due: {new Date(assignment.dueDate).toDateString()}</p>
+              <p>Assigned to: {assignment.assigneeId}</p>
             </div>
-            {/* <AddTaskPopover onSuccess={fetchAssignment} taskId={taskId} /> */}
+            <AssignUserPopover assignmentId={assignmentId} onTaskAssigned={fetchAssignment} />
           </div>
         </CardHeader>
         <CardContent>
           <h2 className="font-semibold text-sm mb-2">Tasks:</h2>
-          <TaskSequenceList tasks={assignment.tasks} />
+          <TaskSequenceList tasks={assignment.tasks || []} />
         </CardContent>
       </Card>
-      <GeocodingMapView assignmentId={assignmentId} tasks={assignment.tasks} onTaskAddedOrUpdated={fetchAssignment} />
+      <GeocodingMapView assignmentId={assignmentId} tasks={assignment.tasks || []} onTaskAddedOrUpdated={fetchAssignment} />
     </div>
   )
 }

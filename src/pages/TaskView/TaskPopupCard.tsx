@@ -49,7 +49,7 @@ export default function TaskPopupCard({ sequenceNo,assignmentId, task, userLat, 
   }, [userLat, userLng, task.latitude, task.longitude])
 
   return (
-    <div className="flex flex-col min-w-[200px]">
+    <div className="flex flex-col">
       <p className="text-sm font-bold">{sequenceNo}</p>
       <p className="text-sm font-bold">{task.name}</p>
       <p className="text-xs text-muted-foreground">{task.description}</p>

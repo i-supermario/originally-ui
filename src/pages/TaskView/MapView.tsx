@@ -73,6 +73,7 @@ export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpda
         lat: location.geometry.coordinates[1],
         name: location.properties.full_address,
       }));
+      console.log(results)
       setSearchResults(results);
     } catch (e) {
       console.error("Search failed", e);
@@ -104,10 +105,11 @@ export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpda
           onCheckedChange={setShowAddedTasks}
           id="task-toggle"
         />
-        <Label htmlFor="task-toggle">Show Added Tasks / Search Results</Label>
+        <Label htmlFor="task-toggle">Show { showAddedTasks ? "Search Results" : "Added tasks" }</Label>
       </div>
       {userLocation && (
         <MapContainer
+          className="z-20"
           center={userLocation}
           zoom={12}
           style={{ height: "500px", width: "100%" }}
@@ -120,6 +122,7 @@ export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpda
           <Marker
             key="user-location"
             position={userLocation}
+            // position={[37.7785, -122.4056]}
             icon={userIcon}
           >
             <Popup>
@@ -134,7 +137,16 @@ export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpda
                 position={[task.latitude, task.longitude]}
               >
                 <Popup>
-                  <TaskPopupCard sequenceNo={idx + 1} assignmentId={assignmentId} task={task} userLat={userLocation[0]} userLng={userLocation[1]} onMarkFinished={onTaskAddedOrUpdated} />
+                  <TaskPopupCard 
+                    sequenceNo={idx + 1} 
+                    assignmentId={assignmentId} 
+                    task={task} 
+                    userLat={userLocation[0]} 
+                    userLng={userLocation[1]}
+                    // userLat={37.7785} 
+                    // userLng={-122.4056}
+                    onMarkFinished={onTaskAddedOrUpdated} 
+                  />
                 </Popup>
               </Marker>
             ))
@@ -142,6 +154,7 @@ export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpda
             searchResults.map((result, idx) => (
               <Marker key={`result-${idx}`} position={[result.lat, result.lng]}>
                 <Popup>
+                  <p className="font-bold">Address: {result.name}</p>
                   <AddTaskPopup
                     lat={result.lat}
                     lng={result.lng}

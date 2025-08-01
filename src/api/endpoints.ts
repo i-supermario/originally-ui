@@ -19,6 +19,7 @@ export const ENDPOINTS = {
     get: (assignmentId: string) => `/assignment/${assignmentId}`,
     addTask: (taskId: string) => `/assignment/${taskId}/add-task`,
     getAll: (userId: string) => `/assignment/get-all/${userId}`,
-    markTaskAsComplete: (assignmentId: string, taskId: string ) => `/assignment/${assignmentId}/task/${taskId}/complete`
+    markTaskAsComplete: (assignmentId: string, taskId: string ) => `/assignment/${assignmentId}/task/${taskId}/complete`,
+    assignTaskTo: (assignmentId: string) => `/assignment/${assignmentId}/assign-to`
   }
 }
