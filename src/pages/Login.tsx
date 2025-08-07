@@ -90,13 +90,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+  
       <motion.div
+        className="min-w-md max-w-lg rounded-2xl bg-white shadow-xl"
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
-        <Card className="w-[380px] shadow-xl border-slate-300">
+        <Card className="shadow-xl border-slate-300">
           <CardHeader>
             <CardTitle className="text-center text-3xl font-bold">Sign In</CardTitle>
             <CardDescription className="text-center">
@@ -168,6 +169,5 @@ export default function Login() {
           }
         </Card>
       </motion.div>
-    </div>
   );
 }

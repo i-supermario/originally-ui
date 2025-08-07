@@ -1,11 +1,11 @@
-import { useTheme } from "@/utils/Theme";
+import { motion } from "framer-motion";
 import Logo from "./logo";
+import { Button } from "@/components/ui/button";
+import { FaDiscord, FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
-  const { darkMode } = useTheme();
-  
   return (
-    <footer className="overflow-hidden bg-background shadow-md backdrop-blur-md py-4 absolute bottom-0 left-0 right-0 w-full">
+    <footer className="overflow-hidden bg-background shadow-md backdrop-blur-md absolute bottom-0 left-0 right-0 w-full">
       {/* Animated Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 opacity-10">
@@ -13,16 +13,55 @@ export default function Footer() {
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle,transparent_20%,var(--tw-gradient-from)_70%)] animate-pulse-slow"></div>
         </div>
       </div>
-      
-      {/* Content */}
-      <div className="container relative z-10 mx-auto flex flex-col md:flex-row items-center justify-between">
-        <div className="flex items-center space-x-2">
+
+      {/* Animated Content */}
+      <motion.div
+        className="container relative z-10 mx-auto flex flex-col md:flex-row items-center justify-between px-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        {/* Left: Logo + Name */}
+        <motion.div
+          className="flex items-center space-x-3"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           <Logo />
-        </div>
-        <p className="text-xs mt-4 md:mt-0 text-foreground/80">
+        </motion.div>
+
+        {/* Middle: Socials / CTA */}
+        <motion.div
+          className="flex space-x-4 mt-4 md:mt-0"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Button variant="ghost" size="icon" className="text-xl">
+            <FaDiscord />
+          </Button>
+          <Button variant="ghost" size="icon" className="text-xl">
+            <FaTwitter />
+          </Button>
+          <Button variant="ghost" size="icon" className="text-xl">
+            <FaLinkedin />
+          </Button>
+          <Button variant="ghost" size="icon" className="text-xl">
+            <FaInstagram />
+          </Button>
+        </motion.div>
+
+        {/* Right: Text */}
+        <motion.p
+          className="text-xs text-foreground/80 mt-4 md:mt-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
           © {new Date().getFullYear()} originally. All rights reserved.
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
     </footer>
   );
 }
