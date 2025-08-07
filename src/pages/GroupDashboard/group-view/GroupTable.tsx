@@ -65,7 +65,7 @@ export function GroupRow({ group, onRefresh }: { group: any; onRefresh: () => vo
   };
 
   const handleGroupTabClick = () => {
-    navigate(`/group-view/${group._id}`)
+    navigate(`/groups/${group._id}`)
   }
 
 

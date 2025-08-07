@@ -29,13 +29,15 @@ export default function Header() {
         <Logo />
 
         <nav className="hidden md:flex space-x-6">
-          <Link to="/" className="text-foreground hover:text-primary">
+          {/* <Link to="/" className="text-foreground hover:text-primary">
             home
-          </Link>
-          <Link to="/dashboard" className="text-foreground hover:text-primary">
+          </Link> */}
+          <Link to="/groups" className="text-foreground hover:text-primary">
             create group
           </Link>
-
+          <Link to="/assignments" className="text-foreground hover:text-primary">
+            create task
+          </Link>
         </nav>
         { 
           isLoading ?

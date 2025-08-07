@@ -15,7 +15,7 @@ export function AddMemberForm({ groupId, onSuccess }: { groupId: string; onSucce
     setLoading(true);
     try {
       await API.METHODS.POST(
-        API.ENDPOINTS.group.add(groupId),
+        API.ENDPOINTS.group.addMember(groupId),
         { email },
         { withCredentials: true },
         {

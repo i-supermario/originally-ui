@@ -32,21 +32,15 @@ function SessionProvider({children}: PropsWithChildren){
   const [email, setEmail] = useState<string>("");
   const [sessionId, setSessionId] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  console.log(email)
-  console.log(userId)
-  console.log(sessionId)
+  // console.log(email)
+  // console.log(userId)
+  // console.log(sessionId)
   const clearSession = () => { 
     setSessionId("");
     setEmail("");
     setUserId("")
   }
 
-  const setSession = (params: { userId: string, email: string, sessionId: string }) => {
-    console.log("setting new session data")
-    setUserId(userId)
-    setEmail(email);
-    setSessionId(sessionId);
-  }
 
   useEffect(() => {
     async function loadSessionInfo() {
