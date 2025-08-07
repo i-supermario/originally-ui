@@ -19,9 +19,9 @@ interface MemberLocation {
 
 export default function MapView({ groupId, userId }: { groupId: string; userId: string }){
   const [members, setMembers] = useState<Record<string, MemberLocation>>({});
-  console.log('GroupId', groupId);
-  console.log('UserId', userId)
-  console.log("Member location updates",members);
+  // console.log('GroupId', groupId);
+  // console.log('UserId', userId)
+  // console.log("Member location updates",members);
   const [defaultLocation, setDefaultLocation] = useState<LatLngExpression | null>(null);
   const mapRef = useRef<any>(null);
 
