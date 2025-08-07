@@ -9,10 +9,12 @@ import { Spinner } from "@/components/ui/spinner"
 import TaskSequenceList from "./TaskSequenceList"
 import GeocodingMapView from "@/pages/TaskView/MapView"
 import AssignUserPopover from "./AssignUserPopup"
+import { useSession } from "@/providers/SessionProvider"
 
 export default function TaskView() {
   const { assignmentId } = useParams()
-  const [assignment, setAssignment] = useState<Assignment | null>(null)
+  const { userId } = useSession()
+  const [assignment, setAssignment] = useState<Assignment & any>(null)
 
   const fetchAssignment = useCallback(async () => {
     if (!assignmentId) return
@@ -48,9 +50,9 @@ export default function TaskView() {
               <CardTitle>{assignment.name}</CardTitle>
               <p className="text-sm text-muted-foreground">{assignment.description}</p>
               <p className="text-xs">Due: {new Date(assignment.dueDate).toDateString()}</p>
-              <p>Assigned to: {assignment.assigneeId}</p>
+              <p>Assigned to: {assignment.assigneeDetails?.firstName || "Unassigned"}</p>
             </div>
-            <AssignUserPopover assignmentId={assignmentId} onTaskAssigned={fetchAssignment} />
+            { userId === assignment.ownerId && <AssignUserPopover assignmentId={assignmentId} onTaskAssigned={fetchAssignment} />}
           </div>
         </CardHeader>
         <CardContent>
@@ -58,7 +60,7 @@ export default function TaskView() {
           <TaskSequenceList tasks={assignment.tasks || []} />
         </CardContent>
       </Card>
-      <GeocodingMapView assignmentId={assignmentId} tasks={assignment.tasks || []} onTaskAddedOrUpdated={fetchAssignment} />
+      <GeocodingMapView assignment={assignment} tasks={assignment.tasks || []} onTaskAddedOrUpdated={fetchAssignment} />
     </div>
   )
 }

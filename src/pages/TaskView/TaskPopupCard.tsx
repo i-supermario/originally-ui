@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
-import { Task, TaskStatus } from "../TaskDashboard"
+import { Assignment, Task, TaskStatus } from "../TaskDashboard"
 import { API } from "@/api"
 import { toast } from "sonner"
+import { useSession } from "@/providers/SessionProvider"
 
 type Props = {
   sequenceNo: number
-  assignmentId: string
+  assignment: Assignment
   task: Task
   userLat: number
   userLng: number
@@ -29,12 +30,13 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c // in meters
 }
 
-export default function TaskPopupCard({ sequenceNo,assignmentId, task, userLat, userLng, onMarkFinished }: Props) {
+export default function TaskPopupCard({ sequenceNo, assignment, task, userLat, userLng, onMarkFinished }: Props) {
+  const { userId } = useSession() 
   const [isNearby, setIsNearby] = useState(false)
 
   const handleTaskFinished = async () => {
     if (!isNearby) return;
-    await API.METHODS.PUT(API.ENDPOINTS.assignment.markTaskAsComplete(assignmentId, task._id), {}, { withCredentials: true }, {
+    await API.METHODS.PUT(API.ENDPOINTS.assignment.markTaskAsComplete(assignment._id, task._id), {}, { withCredentials: true }, {
       onSuccess: (response) => {
         toast.success(response.message)
         onMarkFinished()
@@ -68,20 +70,24 @@ export default function TaskPopupCard({ sequenceNo,assignmentId, task, userLat, 
         </span>
       </p>
 
-      {task.status !== TaskStatus.FINISHED && (
-        <label className="text-sm flex items-center gap-2">
-          <input
-            type="checkbox"
-            disabled={!isNearby}
-            onChange={() => { handleTaskFinished() }}
-          />
-          <span className={isNearby ? "" : "text-gray-400"}>Mark as Finished</span>
-        </label>
-      )}
+      { userId === assignment.assigneeId && 
+        <>
+          {task.status !== TaskStatus.FINISHED && (
+            <label className="text-sm flex items-center gap-2">
+              <input
+                type="checkbox"
+                disabled={!isNearby}
+                onChange={() => { handleTaskFinished() }}
+              />
+              <span className={isNearby ? "" : "text-gray-400"}>Mark as Finished</span>
+            </label>
+          )}
 
-      {!isNearby && task.status !== TaskStatus.FINISHED && (
-        <p className="text-[10px] text-gray-500 mt-1 italic">You need to be closer to finish this task.</p>
-      )}
+          {!isNearby && task.status !== TaskStatus.FINISHED && (
+            <p className="text-[10px] text-gray-500 mt-1 italic">You need to be closer to finish this task.</p>
+          )}
+        </>
+      }
     </div>
   )
 }

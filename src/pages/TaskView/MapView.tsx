@@ -4,12 +4,13 @@ import axios from "axios";
 import AddTaskPopup from "./AddTaskPopup";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Task } from "../TaskDashboard";
+import { Assignment, Task } from "../TaskDashboard";
 import TaskPopupCard from "./TaskPopupCard";
 import L from "leaflet";
+import { useSession } from "@/providers/SessionProvider";
 
 type Props = {
-  assignmentId: string;
+  assignment: Assignment;
   tasks: Task[];
   onTaskAddedOrUpdated: () => void;
 };
@@ -23,7 +24,7 @@ const userIcon = new L.Icon({
 });
 
 
-export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpdated }: Props) {
+export default function GeocodingMapView({ assignment,tasks, onTaskAddedOrUpdated }: Props) {
   const [showAddedTasks, setShowAddedTasks] = useState<boolean>(false);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState<
@@ -31,6 +32,7 @@ export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpda
   >([]);
   const [userLocation, setUserLocation] = useState<number[] | null>();
   const mapRef = useRef<any>(null);
+  const { userId } = useSession();
 
   // Get user's current location
   useEffect(() => {
@@ -66,7 +68,7 @@ export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpda
     if (!search) return;
     try {
       const result = await axios.get(
-        `https://api.mapbox.com/search/geocode/v6/forward?q=${search}&access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
+        `https://api.mapbox.com/search/geocode/v6/forward?q=${search}${ userLocation && `&proximity=${userLocation[1]},${userLocation[0]}` }&access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
       );
       const results = result.data.features.map((location: any) => ({
         lng: location.geometry.coordinates[0],
@@ -139,7 +141,7 @@ export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpda
                 <Popup>
                   <TaskPopupCard 
                     sequenceNo={idx + 1} 
-                    assignmentId={assignmentId} 
+                    assignment={assignment} 
                     task={task} 
                     userLat={userLocation[0]} 
                     userLng={userLocation[1]}
@@ -155,14 +157,17 @@ export default function GeocodingMapView({ assignmentId,tasks, onTaskAddedOrUpda
               <Marker key={`result-${idx}`} position={[result.lat, result.lng]}>
                 <Popup>
                   <p className="font-bold">Address: {result.name}</p>
-                  <AddTaskPopup
-                    lat={result.lat}
-                    lng={result.lng}
-                    assignmentId={assignmentId}
-                    onSuccess={() => {
-                      onTaskAddedOrUpdated()
-                    }}
-                  />
+                  {
+                    userId === assignment.ownerId && 
+                    <AddTaskPopup
+                      lat={result.lat}
+                      lng={result.lng}
+                      assignmentId={assignment._id}
+                      onSuccess={() => {
+                        onTaskAddedOrUpdated()
+                      }}
+                    />
+                  }
                 </Popup>
               </Marker>
             ))

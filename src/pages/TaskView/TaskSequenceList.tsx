@@ -1,7 +1,7 @@
 // components/Task/TaskSequenceList.tsx
 import { Task } from "@/pages/TaskDashboard"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle2, Clock, Circle } from "lucide-react"
+import { CheckCircle2, Circle } from "lucide-react"
 
 
 export default function TaskSequenceList({ tasks }: { tasks: Task[] }) {

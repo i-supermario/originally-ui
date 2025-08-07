@@ -8,7 +8,7 @@ import { useSession } from "@/providers/SessionProvider";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -33,7 +33,9 @@ export default function Login(){
   const [loading, setLoading] = useState<boolean>(false);
   const { setSessionId, setUserId, setEmail } = useSession();
   const [progressValue,setProgressValue] = useState<number>(0);
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -69,8 +71,7 @@ export default function Login(){
             setEmail(message.email);
             setSessionId(message.sessionId);
             setUserId(message.userId)
-            // setSession({ email: message.email, sessionId: message.sessionId });
-            navigate('/groups');
+            navigate(location.state.from || '/groups');
           },
           onError: (data: any) => { toast.error(data.message); }
         }
