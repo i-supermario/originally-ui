@@ -5,8 +5,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
-
 import {
   Form,
   FormControl,
@@ -22,6 +20,7 @@ import { toast } from "sonner";
 import { API } from "@/api";
 import { z } from "zod";
 import { PopoverClose } from "@radix-ui/react-popover";
+import { motion } from "framer-motion";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -59,8 +58,13 @@ export function CreateGroupPopup({ onGroupCreated }: { onGroupCreated: () => voi
       <PopoverTrigger asChild>
         <Button variant="outline">Create</Button>
       </PopoverTrigger>
-      <PopoverContent className=" bg-white">
-        <div className="space-y-4">
+      <PopoverContent className="bg-white">
+        <motion.div
+          className="space-y-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 24 }}
+        >
           <h4 className="text-lg font-semibold">Create New Group</h4>
 
           <Form {...form}>
@@ -95,20 +99,14 @@ export function CreateGroupPopup({ onGroupCreated }: { onGroupCreated: () => voi
                 )}
               />
               <PopoverClose asChild>
-                <Button variant="outline" type="submit" className="">
+                <Button variant="outline" type="submit">
                   Submit
                 </Button>
               </PopoverClose>
             </form>
           </Form>
-        </div>
+        </motion.div>
       </PopoverContent>
     </Popover>
   );
 }
-
-
-
-
-
-

@@ -4,7 +4,7 @@ import { LatLngExpression, icon } from 'leaflet';
 import { ref, onValue, set } from 'firebase/database';
 import { FirebaseService } from '@/lib/firebase/FirebaseService';
 import { User } from '.';
-
+import { motion, AnimatePresence } from 'framer-motion';
 
 const userIcon = icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
@@ -20,9 +20,16 @@ interface MemberLocation {
   lng: number;
 }
 
-export default function MapView({ groupId, userId, memberDetails }: { groupId: string; userId: string, memberDetails: User[] }) {
+export default function MapView({
+  groupId,
+  userId,
+  memberDetails,
+}: {
+  groupId: string;
+  userId: string;
+  memberDetails: User[];
+}) {
   const [members, setMembers] = useState<Record<string, MemberLocation>>({});
-  // console.log(members)
   const [defaultLocation, setDefaultLocation] = useState<LatLngExpression | null>(null);
 
   useEffect(() => {
@@ -42,7 +49,6 @@ export default function MapView({ groupId, userId, memberDetails }: { groupId: s
       { enableHighAccuracy: true }
     );
 
-    // Listen to all group member locations
     const groupRef = ref(db, `groups/${groupId}`);
     const unsubscribe = onValue(groupRef, (snapshot) => {
       const val = snapshot.val() || {};
@@ -62,25 +68,38 @@ export default function MapView({ groupId, userId, memberDetails }: { groupId: s
   if (!defaultLocation) return <p>Loading map...</p>;
 
   return (
-    <MapContainer
-      center={defaultLocation}
-      zoom={13}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6 }}
       style={{ height: '100%', width: '100%' }}
     >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution="&copy; OpenStreetMap contributors"
-      />
+      <MapContainer center={defaultLocation} zoom={13} style={{ height: '100%', width: '100%' }}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution="&copy; OpenStreetMap contributors"
+        />
 
-      {Object.values(members).map((member) => (
-        <Marker
-          key={member.userId}
-          position={[member.lat, member.lng]}
-          icon={userIcon}
-        >
-          <Popup>{member.userId === userId ? 'You' : memberDetails.find(m => m._id === member.userId)?.firstName}</Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+        <AnimatePresence>
+          {Object.values(members).map((member) => (
+            <motion.div
+              key={member.userId}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Marker key={member.userId} position={[member.lat, member.lng]} icon={userIcon}>
+                <Popup>
+                  {member.userId === userId
+                    ? 'You'
+                    : memberDetails.find((m) => m._id === member.userId)?.firstName}
+                </Popup>
+              </Marker>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </MapContainer>
+    </motion.div>
   );
 }

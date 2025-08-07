@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Table,
   TableHeader,
@@ -15,6 +16,18 @@ import { useState } from "react";
 import { AddMemberForm } from "./AddMemberForm";
 import { useNavigate } from "react-router";
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.05,
+      duration: 0.3,
+      ease: "easeOut"
+    }
+  })
+};
 
 export function GroupTable({
   data,
@@ -37,24 +50,26 @@ export function GroupTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((g) => (
-          <GroupRow key={g._id} group={g} onRefresh={onRefresh} />
-        ))}
+        <AnimatePresence initial={false}>
+          {data.map((g, i) => (
+            <GroupRow key={g._id} group={g} onRefresh={onRefresh} index={i} />
+          ))}
+        </AnimatePresence>
       </TableBody>
     </Table>
   );
 }
 
-export function GroupRow({ group, onRefresh }: { group: any; onRefresh: () => void }) {
+export function GroupRow({ group, onRefresh, index }: { group: any; onRefresh: () => void; index: number }) {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleRemoveMember = async (memberId: string) => {
     setLoading(true);
     try {
-      await API.METHODS.DELETE(API.ENDPOINTS.group.remove(group._id, memberId), { }, { withCredentials: true }, {
-        onSuccess: (response) => { toast.success(response.message) },
-        onError: (response) => { toast.error(response.message) }
+      await API.METHODS.DELETE(API.ENDPOINTS.group.remove(group._id, memberId), {}, { withCredentials: true }, {
+        onSuccess: (response) => { toast.success(response.message); },
+        onError: (response) => { toast.error(response.message); }
       });
       onRefresh();
     } catch (e) {
@@ -65,21 +80,25 @@ export function GroupRow({ group, onRefresh }: { group: any; onRefresh: () => vo
   };
 
   const handleGroupTabClick = () => {
-    navigate(`/groups/${group._id}`)
-  }
-
-
+    navigate(`/groups/${group._id}`);
+  };
 
   return (
-    <TableRow>
-      <TableCell className="font-medium cursor-pointer" onClick={() => {handleGroupTabClick()}}>{group.name}</TableCell>
+    <motion.tr
+      variants={fadeInUp}
+      initial="hidden"
+      animate="visible"
+      custom={index}
+      className="transition-all"
+    >
+      <TableCell className="font-medium cursor-pointer hover:scale-[1.02] transition-transform" onClick={handleGroupTabClick}>
+        {group.name}
+      </TableCell>
       <TableCell>{group.description}</TableCell>
       <TableCell>{group.status}</TableCell>
-
       <TableCell>
         <OwnerPopover owner={group.ownerDetails} />
       </TableCell>
-
       <TableCell>
         {group.memberDetails.length > 0 ? (
           <Popover>
@@ -91,7 +110,13 @@ export function GroupRow({ group, onRefresh }: { group: any; onRefresh: () => vo
             <PopoverContent className="bg-white w-72 max-h-64 overflow-auto">
               <div className="text-sm space-y-2">
                 {group.memberDetails.map((member: any, index: number) => (
-                  <li key={index} className="flex items-center justify-between">
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.03 }}
+                    className="flex items-center justify-between"
+                  >
                     <div>
                       <strong>{member.firstName} {member.lastName}</strong>
                       <div className="text-xs text-gray-500">{member.email}</div>
@@ -104,7 +129,7 @@ export function GroupRow({ group, onRefresh }: { group: any; onRefresh: () => vo
                     >
                       ✕
                     </Button>
-                  </li>
+                  </motion.li>
                 ))}
               </div>
             </PopoverContent>
@@ -113,18 +138,16 @@ export function GroupRow({ group, onRefresh }: { group: any; onRefresh: () => vo
           <span className="text-sm text-muted-foreground">No Members</span>
         )}
       </TableCell>
-
       <TableCell>
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="secondary" size="sm">+</Button>
           </PopoverTrigger>
-          <PopoverContent className="w-72 p-2">
+          <PopoverContent className="bg-white w-72 p-2">
             <AddMemberForm groupId={group._id} onSuccess={onRefresh} />
           </PopoverContent>
         </Popover>
       </TableCell>
-    </TableRow>
+    </motion.tr>
   );
 }
-
