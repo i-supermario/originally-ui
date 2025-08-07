@@ -22,7 +22,7 @@ interface MemberLocation {
 
 export default function MapView({ groupId, userId, memberDetails }: { groupId: string; userId: string, memberDetails: User[] }) {
   const [members, setMembers] = useState<Record<string, MemberLocation>>({});
-  console.log(members)
+  // console.log(members)
   const [defaultLocation, setDefaultLocation] = useState<LatLngExpression | null>(null);
 
   useEffect(() => {

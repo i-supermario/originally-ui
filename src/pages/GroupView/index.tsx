@@ -115,7 +115,7 @@ export default function GroupView() {
           <CardTitle>Member Locations</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="w-full h-[300px] bg-muted rounded-xl flex items-center justify-center">
+          <div className="w-full h-[380px] bg-muted rounded-xl flex items-center justify-center">
             <MapView groupId={groupId} userId={userId} memberDetails={groupData.memberDetails} />
           </div>
         </CardContent>
