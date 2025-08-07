@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthSevice";
+import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthService";
 import { useSession } from "@/providers/SessionProvider";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react";
@@ -42,23 +42,23 @@ const FormSchema = z.object({
 
 })
 
-export default function SignUp(){
+export default function SignUp() {
 
   const firebaseAuthService = FirebaseAuthService.getInstance();
 
   const navigate = useNavigate();
   const { email, setEmail, isLoading: isSessionLoading } = useSession();
   const [loading, setLoading] = useState<boolean>(false || isSessionLoading);
-  const [progressValue,setProgressValue] = useState<number>(0);
+  const [progressValue, setProgressValue] = useState<number>(0);
 
   useEffect(() => {
     setLoading(isSessionLoading);
-  },[isSessionLoading])
+  }, [isSessionLoading])
 
   // If active session found, navigate to dashboard
   useEffect(() => {
-    if(email) navigate('/groups')
-  },[email])
+    if (email) navigate('/groups')
+  }, [email])
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -72,34 +72,34 @@ export default function SignUp(){
     }
   })
 
-  if(loading){
+  if (loading) {
     return <div className="w-screen px-80"><Progress value={progressValue} /></div>
   }
 
-  
+
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
 
     setLoading(true)
     setProgressValue(10);
 
-    const { email, password} = values;
+    const { email, password } = values;
     setProgressValue(25);
 
     try {
       const user = await firebaseAuthService.signUpUserWithEmailAndPassword({ email, password })
-      if(!user){
+      if (!user) {
         setLoading(false);
         setProgressValue(0);
         toast.error("User not found")
         return;
       }
       setProgressValue(65);
-      await API.METHODS.POST(API.ENDPOINTS.user.signup, { token: await user.getIdToken() ,...values }, { withCredentials: true} ,
-        { 
-          onSuccess: (message) => { 
+      await API.METHODS.POST(API.ENDPOINTS.user.signup, { token: await user.getIdToken(), ...values }, { withCredentials: true },
+        {
+          onSuccess: (message) => {
             toast.success("Successfully Signed In", message)
-            setEmail(message.email); 
+            setEmail(message.email);
             // setSession({ email: message.email, sessionId: message.sessionId })
             navigate('/groups')
           },
@@ -122,11 +122,11 @@ export default function SignUp(){
       <div className="min-w-80 flex flex-col gap-y-2 border-2 p-12 rounded ">
         <h1 className="text-3xl">Sign Up</h1>
         <Form {...form} >
-          <form 
+          <form
             className="flex flex-col gap-y-4"
             onSubmit={
               form.handleSubmit(
-                onSubmit, 
+                onSubmit,
                 (e) => console.error(e)
               )
             }
@@ -134,14 +134,14 @@ export default function SignUp(){
             <FormField
               control={form.control}
               name="firstName"
-              render={({field}) => (
+              render={({ field }) => (
 
                 <FormItem>
                   <FormLabel>first name</FormLabel>
                   <FormControl>
-                    <Input { ...field } />
+                    <Input {...field} />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
 
               )}
@@ -151,14 +151,14 @@ export default function SignUp(){
             <FormField
               control={form.control}
               name="lastName"
-              render={({field}) => (
+              render={({ field }) => (
 
                 <FormItem>
                   <FormLabel>last name</FormLabel>
                   <FormControl>
-                    <Input { ...field } />
+                    <Input {...field} />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
 
               )}
@@ -185,14 +185,14 @@ export default function SignUp(){
             <FormField
               control={form.control}
               name="phoneNo"
-              render={({field}) => (
+              render={({ field }) => (
 
                 <FormItem>
                   <FormLabel>phone no</FormLabel>
                   <FormControl>
-                    <Input { ...field } />
+                    <Input {...field} />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
 
               )}
@@ -202,14 +202,14 @@ export default function SignUp(){
             <FormField
               control={form.control}
               name="email"
-              render={({field}) => (
+              render={({ field }) => (
 
                 <FormItem>
                   <FormLabel>email</FormLabel>
                   <FormControl>
-                    <Input { ...field } />
+                    <Input {...field} />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
 
               )}
@@ -219,14 +219,14 @@ export default function SignUp(){
             <FormField
               control={form.control}
               name="password"
-              render={({field}) => (
+              render={({ field }) => (
 
                 <FormItem>
                   <FormLabel>password</FormLabel>
                   <FormControl>
-                    <Input type="password" { ...field } />
+                    <Input type="password" {...field} />
                   </FormControl>
-                  <FormMessage/>
+                  <FormMessage />
                 </FormItem>
 
               )}
@@ -234,7 +234,7 @@ export default function SignUp(){
             />
             <Button variant="outline" className="cursor-pointer" type="submit" >Submit</Button>
           </form>
-          
+
         </Form>
       </div>
 

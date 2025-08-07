@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import MapView from './MapView';
 import { useSession } from '@/providers/SessionProvider';
 
-type User = {
+export type User = {
   _id: string;
   email: string;
   firstName: string;
@@ -116,7 +116,7 @@ export default function GroupView() {
         </CardHeader>
         <CardContent>
           <div className="w-full h-[300px] bg-muted rounded-xl flex items-center justify-center">
-            <MapView groupId={groupId} userId={userId} />
+            <MapView groupId={groupId} userId={userId} memberDetails={groupData.memberDetails} />
           </div>
         </CardContent>
       </Card>
