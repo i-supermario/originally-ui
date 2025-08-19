@@ -5,10 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { CreateGroupPopup } from "./CreateGroupPopup";
 import { GroupTable } from "./group-view/GroupTable";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function GroupDashboard() {
   const [groups, setGroups] = useState([]);
-  // console.log(groups)
   const { userId } = useSession();
 
   const fetchGroups = useCallback(() => {
@@ -27,24 +27,56 @@ export default function GroupDashboard() {
         },
       }
     );
-  },[userId])
+  }, [userId]);
 
   useEffect(() => {
     fetchGroups();
   }, []);
 
   return (
-    <div className="flex flex-col">
-      <p className="text-2xl font-semibold">Your groups</p>
-      <div className="flex py-6">
+    <motion.div
+      className="flex flex-col"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      <motion.p
+        className="text-2xl font-semibold"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
+        Your groups
+      </motion.p>
+
+      <motion.div
+        className="flex py-6"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
         <CreateGroupPopup onGroupCreated={fetchGroups} />
-      </div>
-      <Separator className="my-4 bg-gray-300" />
-      <GroupTable data={groups} onRefresh={fetchGroups} />
-    </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, scaleX: 0 }}
+        animate={{ opacity: 1, scaleX: 1 }}
+        transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
+      >
+        <Separator className="my-4 bg-gray-300" />
+      </motion.div>
+
+      <AnimatePresence>
+        <motion.div
+          key="group-table"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <GroupTable data={groups} onRefresh={fetchGroups} />
+        </motion.div>
+      </AnimatePresence>
+    </motion.div>
   );
 }
-
-
-
-

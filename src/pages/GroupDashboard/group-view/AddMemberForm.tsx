@@ -1,9 +1,9 @@
-// AddMemberForm.tsx
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { API } from "@/api";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 export function AddMemberForm({ groupId, onSuccess }: { groupId: string; onSuccess: () => void }) {
   const [email, setEmail] = useState("");
@@ -33,16 +33,33 @@ export function AddMemberForm({ groupId, onSuccess }: { groupId: string; onSucce
   };
 
   return (
-    <div className="space-y-2">
-      <Input
-        type="email"
-        placeholder="Enter member email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <Button variant="outline" onClick={handleAdd} className="">
-        Add Member
-      </Button>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 10 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-2"
+    >
+      <motion.div
+        whileFocus={{ scale: 1.02, boxShadow: "0 0 8px rgba(59, 130, 246, 0.6)" }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <Input
+          type="email"
+          placeholder="Enter member email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </motion.div>
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <Button variant="outline" onClick={handleAdd} disabled={loading}>
+          {loading ? "Adding..." : "Add Member"}
+        </Button>
+      </motion.div>
+    </motion.div>
   );
 }

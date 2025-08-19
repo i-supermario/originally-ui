@@ -1,7 +1,7 @@
 import { AxiosInstance } from "@/config/axios";
 import { AxiosRequestConfig } from "axios";
 
-type Callbacks<T> = {
+type Callbacks = {
   onSuccess: (data: any) => void;
   onError: (data: any) => void;
 };
@@ -10,7 +10,7 @@ export const GetRequest = async <T>(
   url: string,
   queryParams: Record<string, any>, 
   options: AxiosRequestConfig,
-  { onSuccess, onError }: Callbacks<T>
+  { onSuccess, onError }: Callbacks
 ): Promise<void> => {
   try {
     const response = await AxiosInstance.get<T>(url, {
@@ -31,7 +31,7 @@ export const PostRequest = async <T>(
   url: string,
   body: any = {},
   options: AxiosRequestConfig = {},
-  { onSuccess, onError }: Callbacks<T>
+  { onSuccess, onError }: Callbacks
 ): Promise<void> => {
   try {
     const response = await AxiosInstance.post<T>(url, body, { ...options });
@@ -50,7 +50,7 @@ export const DeleteRequest = async <T>(
   url: string,
   queryParams: Record<string, any> = {},
   options: AxiosRequestConfig = {},
-  { onSuccess, onError }: Callbacks<T>
+  { onSuccess, onError }: Callbacks
 ): Promise<void> => {
   try {
     const response = await AxiosInstance.delete<T>(url, {
@@ -69,7 +69,7 @@ export const PutRequest = async <T>(
   url: string,
   body: any = {},
   options: AxiosRequestConfig = {},
-  { onSuccess, onError }: Callbacks<T>
+  { onSuccess, onError }: Callbacks
 ): Promise<void> => {
   try {
     const response = await AxiosInstance.put<T>(url, body, { ...options });

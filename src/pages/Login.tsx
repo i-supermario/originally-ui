@@ -1,148 +1,173 @@
 import { API } from "@/api";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthService";
 import { useSession } from "@/providers/SessionProvider";
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
+import { useState } from "react";
 import { z } from "zod";
+import { motion } from "framer-motion";
 
 const FormSchema = z.object({
-  email: z.string({
-    required_error: "A email address is required"
-  }).email({
-    message: "Please provide a valid email address"
-  }),
-  password: z.string({
-    required_error: "A password is required"
-  }).min(8,
-    {
-      message: "Password must be atleast 8 characters"
-    }
-  )
-})
+  email: z.string({ required_error: "Email is required" }).email("Invalid email address"),
+  password: z.string({ required_error: "Password is required" }).min(8, "Password must be at least 8 characters"),
+});
 
 export default function Login() {
-
   const firebaseAuthService = FirebaseAuthService.getInstance();
-  const [loading, setLoading] = useState<boolean>(false);
   const { setSessionId, setUserId, setEmail } = useSession();
-  const [progressValue, setProgressValue] = useState<number>(0);
-
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [progressValue, setProgressValue] = useState<number>(0);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
       password: "",
-    }
-  })
-
-  if (loading) {
-    return <div className="w-screen px-80"><Progress value={progressValue} /></div>
-  }
+    },
+  });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-
-    setLoading(true)
+    setLoading(true);
     const { email, password } = values;
     setProgressValue(10);
-    try {
-      const user = await firebaseAuthService.loginWithEmailAndPassword({ email, password })
 
+    try {
+      const user = await firebaseAuthService.loginWithEmailAndPassword({ email, password });
       if (!user) {
-        setLoading(false);
         toast.error("User not found");
+        setLoading(false);
         return;
       }
-      setProgressValue(50);
 
-      await API.METHODS.POST(API.ENDPOINTS.user.login, { token: await user.getIdToken(), ...values }, { withCredentials: true },
+      setProgressValue(50);
+      await API.METHODS.POST(
+        API.ENDPOINTS.user.login,
+        { token: await user.getIdToken(), ...values },
+        { withCredentials: true },
         {
           onSuccess: (message) => {
-            toast.success("Successfully Logged In", message);
+            toast.success("Logged in successfully", { description: message.email });
             setEmail(message.email);
             setSessionId(message.sessionId);
-            setUserId(message.userId)
-            navigate(location.state.from || '/groups');
+            setUserId(message.userId);
+            navigate(location.state?.from || "/groups");
           },
-          onError: (data: any) => { toast.error(data.message); }
+          onError: (data: any) => {
+            toast.error(data.message);
+          },
         }
-      )
+      );
     } catch (error) {
       toast.error(String(error));
     }
+
     setProgressValue(90);
-
-    setLoading(false)
-    return;
-
-  }
-
-
+    setLoading(false);
+  };
 
   return (
-    <>
-      <div className="min-w-80 flex flex-col gap-y-2 border-2 p-12 rounded ">
-        <h1 className="text-3xl">Login</h1>
-        <Form {...form} >
-          <form
-            className="flex flex-col gap-y-4"
-            onSubmit={
-              form.handleSubmit(
-                onSubmit,
-                (e) => console.error(e)
-              )
-            }
-          >
+  
+      <motion.div
+        className="min-w-md max-w-lg rounded-2xl bg-white shadow-xl"
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+      >
+        <Card className="shadow-xl border-slate-300">
+          <CardHeader>
+            <CardTitle className="text-center text-3xl font-bold">Sign In</CardTitle>
+            <CardDescription className="text-center">
+              Welcome back! Enter your credentials to continue.
+            </CardDescription>
+          </CardHeader>
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
+          {
+          loading ?
+           <div className="px-6">
+            <Progress value={progressValue} />
+           </div>
+           :
+           <>
+            <CardContent>
+              <Form {...form}>
+                <form
+                  className="flex flex-col gap-5"
+                  onSubmit={form.handleSubmit(onSubmit, (e) => console.error(e))}
+                >
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <Input placeholder="you@example.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormItem>
-                  <FormLabel>email</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="••••••••" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              )}
+                  <Button className="mt-2" type="submit" variant="outline">
+                    Sign In
+                  </Button>
+                </form>
+              </Form>
 
-            />
+              {/* <div className="text-right text-sm mt-3">
+                <a href="#" className="text-blue-500 hover:underline">
+                  Forgot password?
+                </a>
+              </div> */}
+            </CardContent>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-
-                <FormItem>
-                  <FormLabel>password</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-
-              )}
-
-            />
-            <Button variant="outline" className="cursor-pointer" type="submit" >Submit</Button>
-          </form>
-
-        </Form>
-      </div>
-
-    </>
-  )
-
+            <CardFooter className="justify-center text-sm text-muted-foreground">
+              Don’t have an account?{" "}
+              <a href="/sign-up" className="text-blue-500 ml-1 hover:underline">
+                Sign up
+              </a>
+            </CardFooter>
+           </>
+          }
+        </Card>
+      </motion.div>
+  );
 }

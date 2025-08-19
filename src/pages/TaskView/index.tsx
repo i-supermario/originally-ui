@@ -60,7 +60,14 @@ export default function TaskView() {
           <TaskSequenceList tasks={assignment.tasks || []} />
         </CardContent>
       </Card>
-      <GeocodingMapView assignment={assignment} tasks={assignment.tasks || []} onTaskAddedOrUpdated={fetchAssignment} />
+      <Card>
+        <CardHeader>
+          <CardTitle>Map</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <GeocodingMapView assignment={assignment} tasks={assignment.tasks || []} onTaskAddedOrUpdated={fetchAssignment} />
+        </CardContent>
+      </Card>
     </div>
   )
 }

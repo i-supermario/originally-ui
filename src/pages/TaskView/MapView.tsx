@@ -6,8 +6,12 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Assignment, Task } from "../TaskDashboard";
 import TaskPopupCard from "./TaskPopupCard";
-import L from "leaflet";
+import L, { LatLng } from "leaflet";
 import { useSession } from "@/providers/SessionProvider";
+import { FirebaseService } from "@/lib/firebase/FirebaseService";
+import { ref, onValue, set } from 'firebase/database';
+
+const db = FirebaseService.getInstance().getRealtimeDB();
 
 type Props = {
   assignment: Assignment;
@@ -31,6 +35,7 @@ export default function GeocodingMapView({ assignment,tasks, onTaskAddedOrUpdate
     { name: string; lat: number; lng: number }[]
   >([]);
   const [userLocation, setUserLocation] = useState<number[] | null>();
+  const [assigneeLocation, setAssigneeLocation] = useState<number[] | null>(null);
   const mapRef = useRef<any>(null);
   const { userId } = useSession();
 
@@ -42,6 +47,14 @@ export default function GeocodingMapView({ assignment,tasks, onTaskAddedOrUpdate
       (pos) => {
         const newLocation = [pos.coords.latitude, pos.coords.longitude];
         setUserLocation(newLocation);
+
+        if(userId === assignment.assigneeId) {
+          set(ref(db, `assignments/${assignment._id}`), {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            timestamp: Date.now(),
+          })
+        }
 
         if (mapRef.current) {
           mapRef.current.setView(newLocation, mapRef.current.getZoom());
@@ -62,6 +75,21 @@ export default function GeocodingMapView({ assignment,tasks, onTaskAddedOrUpdate
       navigator.geolocation.clearWatch(watchId);
     };
   }, []);
+
+  useEffect(() => {
+    if(userId !== assignment.ownerId) return;
+    const assignmentRef = ref(db, `assignments/${assignment._id}`);
+    const unsubscribe = onValue(assignmentRef, (snapshot) => {
+      const val = snapshot.val() || {};
+      if(val) {
+        setAssigneeLocation([val.lat, val.lng]);
+      }
+    })
+
+    return () => {
+      unsubscribe();
+    }
+  },[])
 
 
   const handleSearch = async () => {
@@ -112,19 +140,30 @@ export default function GeocodingMapView({ assignment,tasks, onTaskAddedOrUpdate
       {userLocation && (
         <MapContainer
           className="z-20"
-          center={userLocation}
+          center={new LatLng(userLocation[0], userLocation[1])}
           zoom={12}
           style={{ height: "500px", width: "100%" }}
-          whenCreated={(mapInstance) => (mapRef.current = mapInstance)}
+          // whenCreated={(mapInstance) => (mapRef.current = mapInstance)}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution="&copy; OpenStreetMap contributors"
           />
+          {
+            assigneeLocation &&
+            <Marker
+              key="assignee-location"
+              position={new LatLng(assigneeLocation[0], assigneeLocation[1])}
+              icon={userIcon}
+            >
+              <Popup>
+                <p className="font-bold">{assignment.assigneeDetails.firstName}</p>
+              </Popup>
+            </Marker>
+          }
           <Marker
             key="user-location"
-            position={userLocation}
-            // position={[37.7785, -122.4056]}
+            position={new LatLng(userLocation[0], userLocation[1])}
             icon={userIcon}
           >
             <Popup>
