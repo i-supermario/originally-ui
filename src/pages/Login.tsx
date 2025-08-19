@@ -151,19 +151,13 @@ export default function Login() {
                   </Button>
                 </form>
               </Form>
-
-              {/* <div className="text-right text-sm mt-3">
-                <a href="#" className="text-blue-500 hover:underline">
-                  Forgot password?
-                </a>
-              </div> */}
             </CardContent>
 
             <CardFooter className="justify-center text-sm text-muted-foreground">
               Don’t have an account?{" "}
-              <a href="/sign-up" className="text-blue-500 ml-1 hover:underline">
+              <Button onClick={() => navigate("/sign-up")} className="text-blue-500 ml-1 hover:underline">
                 Sign up
-              </a>
+              </Button>
             </CardFooter>
            </>
           }

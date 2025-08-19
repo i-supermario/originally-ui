@@ -252,9 +252,9 @@ export default function SignUp() {
             </CardContent>
             <CardFooter className="justify-center text-sm text-muted-foreground">
               Have an account?{" "}
-              <a href="/login" className="text-blue-500 ml-1 hover:underline">
+              <Button onClick={() => navigate("/login")} className="text-blue-500 ml-1 hover:underline">
                 Login
-              </a>
+              </Button>
             </CardFooter>
         </Card>
       </motion.div>
