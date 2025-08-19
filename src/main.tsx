@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { BrowserRouter, Route, Routes } from 'react-router'
-import Home from './pages/Home.tsx'
+import Home from './pages/home.tsx'
 import PrimaryLayout from './layouts/primary.tsx'
 import { ThemeProvider } from './utils/Theme.tsx'
 import SignUp from './pages/SignUp.tsx'
