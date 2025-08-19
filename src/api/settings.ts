@@ -1,4 +1,4 @@
 
 export const SETTINGS = () => ({
-  URL: "http://localhost:3000/"
+  URL: process.env.VITE_BACKEND_URL || "http://localhost:3000/"
 })
