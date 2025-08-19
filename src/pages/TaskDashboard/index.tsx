@@ -20,6 +20,7 @@ export interface Task {
   longitude: number;
 }
 export interface Assignment {
+  assigneeDetails: any;
   _id: string
   ownerId: string
   assigneeId: string
@@ -43,8 +44,8 @@ export default function AssignmentDashboard() {
       { withCredentials: true },
       {
         onSuccess: (response) => {
-          setOwnedAssignment(response.data.filter( _ => _.ownerId === userId));
-          setAssignedAssignments(response.data.filter(_ => _.assigneeId === userId))
+          setOwnedAssignment(response.data.filter( (_: { ownerId: string; }) => _.ownerId === userId));
+          setAssignedAssignments(response.data.filter((_: { assigneeId: string; }) => _.assigneeId === userId))
           console.log(response)
           toast.success("Fetched groups successfully");
         },

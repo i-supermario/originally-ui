@@ -36,6 +36,7 @@ export default function GroupView() {
 
     async function fetchGroup() {
       setLoading(true);
+      if (!groupId) return;
       try {
         await API.METHODS.GET(
           API.ENDPOINTS.group.get(groupId),

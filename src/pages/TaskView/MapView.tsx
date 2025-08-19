@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Assignment, Task } from "../TaskDashboard";
 import TaskPopupCard from "./TaskPopupCard";
-import L from "leaflet";
+import L, { LatLng } from "leaflet";
 import { useSession } from "@/providers/SessionProvider";
 import { FirebaseService } from "@/lib/firebase/FirebaseService";
 import { ref, onValue, set } from 'firebase/database';
@@ -140,10 +140,10 @@ export default function GeocodingMapView({ assignment,tasks, onTaskAddedOrUpdate
       {userLocation && (
         <MapContainer
           className="z-20"
-          center={userLocation}
+          center={new LatLng(userLocation[0], userLocation[1])}
           zoom={12}
           style={{ height: "500px", width: "100%" }}
-          whenCreated={(mapInstance) => (mapRef.current = mapInstance)}
+          // whenCreated={(mapInstance) => (mapRef.current = mapInstance)}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -153,7 +153,7 @@ export default function GeocodingMapView({ assignment,tasks, onTaskAddedOrUpdate
             assigneeLocation &&
             <Marker
               key="assignee-location"
-              position={assigneeLocation}
+              position={new LatLng(assigneeLocation[0], assigneeLocation[1])}
               icon={userIcon}
             >
               <Popup>
@@ -163,7 +163,7 @@ export default function GeocodingMapView({ assignment,tasks, onTaskAddedOrUpdate
           }
           <Marker
             key="user-location"
-            position={userLocation}
+            position={new LatLng(userLocation[0], userLocation[1])}
             icon={userIcon}
           >
             <Popup>
