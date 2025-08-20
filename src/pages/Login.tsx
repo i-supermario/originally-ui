@@ -90,78 +90,82 @@ export default function Login() {
   };
 
   return (
-  
+    <div className="flex justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8">
       <motion.div
-        className="min-w-md max-w-lg rounded-2xl bg-white shadow-xl"
+        className="sm:min-w-md max-w-lg lg:max-w-xl rounded-2xl bg-white shadow-xl"
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
       >
         <Card className="shadow-xl border-slate-300">
           <CardHeader>
-            <CardTitle className="text-center text-3xl font-bold">Sign In</CardTitle>
-            <CardDescription className="text-center">
+            <CardTitle className="text-center text-2xl sm:text-3xl font-bold">Sign In</CardTitle>
+            <CardDescription className="text-center text-sm sm:text-base">
               Welcome back! Enter your credentials to continue.
             </CardDescription>
           </CardHeader>
 
-          {
-          loading ?
-           <div className="px-6">
-            <Progress value={progressValue} />
-           </div>
-           :
-           <>
-            <CardContent>
-              <Form {...form}>
-                <form
-                  className="flex flex-col gap-5"
-                  onSubmit={form.handleSubmit(onSubmit, (e) => console.error(e))}
+          {loading ? (
+            <div className="px-6 py-4">
+              <Progress value={progressValue} />
+            </div>
+          ) : (
+            <>
+              <CardContent>
+                <Form {...form}>
+                  <form
+                    className="flex flex-col gap-4 sm:gap-5"
+                    onSubmit={form.handleSubmit(onSubmit, (e) => console.error(e))}
+                  >
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email Address</FormLabel>
+                          <FormControl>
+                            <Input placeholder="you@example.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input type="password" placeholder="••••••••" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button className="mt-2 w-full" type="submit" variant="outline">
+                      Sign In
+                    </Button>
+                  </form>
+                </Form>
+              </CardContent>
+
+              <CardFooter className="justify-center text-sm text-muted-foreground flex flex-wrap gap-2">
+                Don’t have an account?
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate("/sign-up")}
+                  className="text-blue-500 hover:underline"
                 >
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email Address</FormLabel>
-                        <FormControl>
-                          <Input placeholder="you@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <Button className="mt-2" type="submit" variant="outline">
-                    Sign In
-                  </Button>
-                </form>
-              </Form>
-            </CardContent>
-
-            <CardFooter className="justify-center text-sm text-muted-foreground">
-              Don’t have an account?{" "}
-              <Button variant="ghost" onClick={() => navigate("/sign-up")} className="text-blue-500 ml-1 hover:underline">
-                Sign up
-              </Button>
-            </CardFooter>
-           </>
-          }
+                  Sign up
+                </Button>
+              </CardFooter>
+            </>
+          )}
         </Card>
       </motion.div>
+    </div>
   );
 }

@@ -16,7 +16,7 @@ export default function Footer() {
 
       {/* Animated Content */}
       <motion.div
-        className="container relative z-10 mx-auto flex flex-col md:flex-row items-center justify-between px-4"
+        className="relative z-10 mx-auto flex flex-row items-center justify-between px-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -33,7 +33,7 @@ export default function Footer() {
 
         {/* Middle: Socials / CTA */}
         <motion.div
-          className="flex space-x-4 mt-4 md:mt-0"
+          className="flex space-x-4 sm:mt-4 md:mt-0"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
@@ -58,7 +58,7 @@ export default function Footer() {
 
         {/* Right: Text */}
         <motion.p
-          className="text-xs text-foreground/80 mt-4 md:mt-0"
+          className="hidden sm:inline text-xs text-foreground/80 mt-4 md:mt-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
