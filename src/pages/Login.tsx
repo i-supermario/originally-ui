@@ -155,7 +155,7 @@ export default function Login() {
 
             <CardFooter className="justify-center text-sm text-muted-foreground">
               Don’t have an account?{" "}
-              <Button onClick={() => navigate("/sign-up")} className="text-blue-500 ml-1 hover:underline">
+              <Button variant="ghost" onClick={() => navigate("/sign-up")} className="text-blue-500 ml-1 hover:underline">
                 Sign up
               </Button>
             </CardFooter>

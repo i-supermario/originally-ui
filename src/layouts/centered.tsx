@@ -4,7 +4,8 @@ export function CenteredLayout(){
 
   return(
     <>
-      <div className=" w-screen h-screen flex items-center justify-center">
+      
+      <div className="bg-gradient-to-b from-white via-rose-200 to-orange-200 w-screen h-screen flex items-center justify-center">
         <Outlet/>
       </div>
     </>

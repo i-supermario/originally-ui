@@ -6,7 +6,7 @@ export default function PrimaryLayout(){
   return(
     <>
       <div
-        className="flex flex-col h-full"
+        className="bg-gradient-to-b from-white via-rose-200 to-orange-200 flex flex-col h-full"
       >
         <Header/>
         <main className="overflow-y-auto">
