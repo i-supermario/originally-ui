@@ -39,16 +39,20 @@ export default function Footer() {
           transition={{ delay: 0.3 }}
         >
           <Button variant="ghost" size="icon" className="text-xl">
-            <FaDiscord />
+            <a href="https://discordapp.com/users/722621291135500419" >
+              <FaDiscord />
+            </a>
           </Button>
           <Button variant="ghost" size="icon" className="text-xl">
-            <FaTwitter />
+            <a href="https://x.com/srngnkhr">
+              <FaTwitter />
+            </a>
           </Button>
           <Button variant="ghost" size="icon" className="text-xl">
-            <FaLinkedin />
+            <a href="https://www.linkedin.com/in/sarang-nikhare/"><FaLinkedin /></a>
           </Button>
           <Button variant="ghost" size="icon" className="text-xl">
-            <FaInstagram />
+            <a href="https://www.instagram.com/sarangggggggggggg/"><FaInstagram /></a>
           </Button>
         </motion.div>
 
