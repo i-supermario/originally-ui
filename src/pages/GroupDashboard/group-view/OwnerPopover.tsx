@@ -10,8 +10,8 @@ export function OwnerPopover({ owner }: { owner: any }) {
       <PopoverTrigger asChild>
         <motion.p
           className="underline cursor-pointer text-primary"
-          whileHover={{ scale: 1.1, color: "#6366F1" /* Indigo-500 */ }}
-          transition={{ type: "spring", stiffness: 300 }}
+          whileHover={{ scale: 1.02, color: "#6366F1" /* Indigo-500 */ }}
+          transition={{ type: "spring" }}
         >
           {owner?.firstName || "Owner"}
         </motion.p>
@@ -41,3 +41,25 @@ export function OwnerPopover({ owner }: { owner: any }) {
     </Popover>
   );
 }
+
+const WaveText = ({ text }: { text: string }) => {
+  return (
+    <motion.div className="inline-block cursor-pointer">
+      {text.split("").map((char, i) => (
+        <motion.span
+          key={i}
+          className="inline-block"
+          animate={{ y: [0, -5, 0, 5, 0] }} // wave pattern
+          transition={{
+            repeat: Infinity,
+            duration: 2,
+            delay: i * 0.1, // offset each letter for wave
+            ease: "easeInOut",
+          }}
+        >
+          {char}
+        </motion.span>
+      ))}
+    </motion.div>
+  );
+};

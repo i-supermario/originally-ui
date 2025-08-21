@@ -35,22 +35,24 @@ export default function GroupDashboard() {
 
   return (
     <motion.div
-      className="flex flex-col"
+      className="flex flex-col w-full p-4 sm:py-0 sm:px-6 lg:px-12 xl:px-20"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
+      {/* Title */}
       <motion.p
-        className="text-2xl font-semibold"
+        className="text-xl sm:text-2xl lg:text-3xl font-semibold text-center sm:text-left"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
       >
-        Your groups
+        Your Groups
       </motion.p>
 
+      {/* Create Group Button */}
       <motion.div
-        className="flex py-6"
+        className="flex justify-center sm:justify-start py-4 sm:py-6"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
@@ -58,14 +60,7 @@ export default function GroupDashboard() {
         <CreateGroupPopup onGroupCreated={fetchGroups} />
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, scaleX: 0 }}
-        animate={{ opacity: 1, scaleX: 1 }}
-        transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
-      >
-        <Separator className="my-4 bg-gray-300" />
-      </motion.div>
-
+      {/* Group Table */}
       <AnimatePresence>
         <motion.div
           key="group-table"
@@ -73,6 +68,7 @@ export default function GroupDashboard() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.5, delay: 0.4 }}
+          className="overflow-x-auto w-full"
         >
           <GroupTable data={groups} onRefresh={fetchGroups} />
         </motion.div>
