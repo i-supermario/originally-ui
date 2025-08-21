@@ -2,7 +2,6 @@ import { API } from "@/api";
 import { useSession } from "@/providers/SessionProvider";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
-import { Separator } from "@/components/ui/separator";
 import { CreateGroupPopup } from "./CreateGroupPopup";
 import { GroupTable } from "./group-view/GroupTable";
 import { motion, AnimatePresence } from "framer-motion";
