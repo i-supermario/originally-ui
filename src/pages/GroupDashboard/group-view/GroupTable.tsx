@@ -201,7 +201,6 @@ function GroupCard({
   index: number;
 }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
   const handleGroupTabClick = () => {
     navigate(`/groups/${group._id}`);

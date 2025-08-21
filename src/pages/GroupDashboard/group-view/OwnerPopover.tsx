@@ -41,25 +41,3 @@ export function OwnerPopover({ owner }: { owner: any }) {
     </Popover>
   );
 }
-
-const WaveText = ({ text }: { text: string }) => {
-  return (
-    <motion.div className="inline-block cursor-pointer">
-      {text.split("").map((char, i) => (
-        <motion.span
-          key={i}
-          className="inline-block"
-          animate={{ y: [0, -5, 0, 5, 0] }} // wave pattern
-          transition={{
-            repeat: Infinity,
-            duration: 2,
-            delay: i * 0.1, // offset each letter for wave
-            ease: "easeInOut",
-          }}
-        >
-          {char}
-        </motion.span>
-      ))}
-    </motion.div>
-  );
-};
