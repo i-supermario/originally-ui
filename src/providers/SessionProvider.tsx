@@ -67,7 +67,9 @@ function SessionProvider({children}: PropsWithChildren){
       }
     }
 
-    loadSessionInfo();
+    if(!sessionId) {
+      loadSessionInfo();
+    }
   }, []);
 
 

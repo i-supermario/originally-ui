@@ -34,7 +34,7 @@ const FormSchema = z.object({
 export default function SignUp() {
   const firebaseAuthService = FirebaseAuthService.getInstance();
   const navigate = useNavigate();
-  const { email, setEmail, isLoading: isSessionLoading } = useSession();
+  const { email, setEmail, setSessionId, setUserId, isLoading: isSessionLoading } = useSession();
   const [loading, setLoading] = useState<boolean>(false || isSessionLoading);
   const [progressValue, setProgressValue] = useState<number>(0);
 
@@ -62,7 +62,13 @@ export default function SignUp() {
         { token: await user.getIdToken(), ...values },
         { withCredentials: true },
         {
-          onSuccess: (message) => { toast.success("Account created successfully!"); setEmail(message.email); navigate("/groups"); },
+          onSuccess: (message) => {
+            toast.success("Account created successfully!");
+            setEmail(message.email);
+            setUserId(message.userId);
+            setSessionId(message.sessionId); 
+            navigate("/groups");
+          },
           onError: (data: any) => { toast.error(data?.message || "Signup failed"); }
         }
       );
