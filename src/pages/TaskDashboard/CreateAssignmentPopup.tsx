@@ -73,7 +73,7 @@ export function CreateAssignmentPopover({ onSuccess }: { onSuccess: () => void }
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-96 bg-white space-y-4">
+      <PopoverContent className="w-full max-w-sm sm:max-w-md md:max-w-lg bg-white space-y-4">
         <h4 className="text-lg font-semibold">Create Assignment</h4>
 
         <Form {...form}>
