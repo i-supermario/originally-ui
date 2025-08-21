@@ -5,7 +5,7 @@ import { FaDiscord, FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="overflow-hidden bg-background shadow-md backdrop-blur-md absolute bottom-0 left-0 right-0 w-full z-50">
+    <footer className="text-gray-800 overflow-hidden bg-background shadow-md backdrop-blur-md absolute bottom-0 left-0 right-0 w-full z-50">
       {/* Animated Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 opacity-10">
