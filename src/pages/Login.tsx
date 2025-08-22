@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { z } from "zod";
 import { motion } from "framer-motion";
+import LoadingStickMan from "@/assets/StickMan Walking.gif";
 
 const FormSchema = z.object({
   email: z.string({ required_error: "Email is required" }).email("Invalid email address"),
@@ -90,27 +91,32 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8">
-      <motion.div
-        className="sm:min-w-md max-w-lg lg:max-w-xl rounded-2xl bg-white shadow-xl"
-        initial={{ opacity: 0, y: 25 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-      >
-        <Card className="shadow-xl border-slate-300">
-          <CardHeader>
-            <CardTitle className="text-center text-2xl sm:text-3xl font-bold">Sign In</CardTitle>
-            <CardDescription className="text-center text-sm sm:text-base">
-              Welcome back! Enter your credentials to continue.
-            </CardDescription>
-          </CardHeader>
+    <>
+      {loading ? 
+      (
+        <div className="px-6 py-4">
+          {/* <Progress value={progressValue} /> */}
+          <img src={LoadingStickMan} className="size-36" />
+        </div>
+      ) : 
+      (
+            
+        <div className="flex justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="min-w-sm sm:min-w-md max-w-lg lg:max-w-xl rounded-2xl bg-white shadow-xl"
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          >
+            <Card className="shadow-xl border-slate-300">
+              <CardHeader>
+                <CardTitle className="text-center text-2xl sm:text-3xl font-bold">Sign In</CardTitle>
+                <CardDescription className="text-center text-sm sm:text-base">
+                  Welcome back! Enter your credentials to continue.
+                </CardDescription>
+              </CardHeader>
 
-          {loading ? (
-            <div className="px-6 py-4">
-              <Progress value={progressValue} />
-            </div>
-          ) : (
-            <>
+              
               <CardContent>
                 <Form {...form}>
                   <form
@@ -162,10 +168,11 @@ export default function Login() {
                   Sign up
                 </Button>
               </CardFooter>
-            </>
-          )}
-        </Card>
-      </motion.div>
-    </div>
+                
+            </Card>
+          </motion.div>
+        </div>
+      )}
+    </>
   );
 }

@@ -5,8 +5,8 @@ import { Link, useNavigate } from "react-router";
 import Logo from "./logo";
 import { useSession } from "@/providers/SessionProvider";
 import { API } from "@/api";
-import { Spinner } from "./ui/spinner";
 import { motion, AnimatePresence } from "framer-motion";
+import LoadingStickMan from "@/assets/StickMan Walking.gif";
 
 export default function Header() {
   const { email, clearSession, isLoading } = useSession();
@@ -76,7 +76,7 @@ export default function Header() {
           {/* Desktop user actions */}
           <div className="hidden md:flex items-center space-x-4">
             {isLoading ? (
-              <Spinner size="sm" className="bg-black dark:bg-white" />
+              <img src={LoadingStickMan} className="size-12" />
             ) : isSessionActive ? (
               <Button
                 className="text-black"
@@ -133,7 +133,7 @@ export default function Header() {
 
               {/* User Actions */}
               {isLoading ? (
-                <Spinner size="sm" className="bg-black dark:bg-white" />
+                <img src={LoadingStickMan} className="size-6" />
               ) : isSessionActive ? (
                 <Button
                   variant="outline"

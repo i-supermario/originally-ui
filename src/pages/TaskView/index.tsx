@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { API } from "@/api"
 import { Assignment } from "../TaskDashboard"
-import { Spinner } from "@/components/ui/spinner"
+import LoadingStickMan from "@/assets/StickMan Walking.gif";
 import TaskSequenceList from "./TaskSequenceList"
 import GeocodingMapView from "@/pages/TaskView/MapView"
 import AssignUserPopover from "./AssignUserPopup"
@@ -36,7 +36,7 @@ export default function TaskView() {
   if (!assignmentId || !assignment) {
     return (
       <div className="flex justify-center items-center h-full">
-        <Spinner size="sm" className="bg-black dark:bg-white" />
+        <img src={LoadingStickMan} className="size-12" />
       </div>
     )
   }

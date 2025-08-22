@@ -1,6 +1,6 @@
 import { useSession } from "@/providers/SessionProvider";
 import { Navigate, Outlet, useLocation } from "react-router";
-import { Spinner } from "@/components/ui/spinner";
+import LoadingStickMan from "@/assets/StickMan Walking.gif";
 
 export default function AuthenticatedLayout(){
 
@@ -9,7 +9,7 @@ export default function AuthenticatedLayout(){
   const location = useLocation();
   
   if(isLoading){
-    return <div className="flex justify-center items-center"><Spinner size="sm" className="bg-black dark:bg-white" /></div>
+    return <div className="flex justify-center items-center"><img src={LoadingStickMan} className="size-6" /></div>
   }
 
   if(!userId) {
