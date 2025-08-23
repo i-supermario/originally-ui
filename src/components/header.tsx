@@ -34,7 +34,7 @@ export default function Header() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="text-gray-800 bg-background shadow-md backdrop-blur-md fixed top-0 left-0 right-0 w-full z-50"
+      className=" shadow-md backdrop-blur-md fixed top-0 left-0 right-0 w-full z-50"
     >
       <div className="mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8 h-16">
         {/* Logo */}
