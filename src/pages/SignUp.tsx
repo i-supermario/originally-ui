@@ -9,7 +9,6 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthService";
 import { useSession } from "@/providers/SessionProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +20,8 @@ import { z } from "zod";
 import { DatePicker } from "@/components/datepicker";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import LoadingStickMan from "@/assets/StickMan Walking.gif";
+
 
 const FormSchema = z.object({
   email: z.string({ required_error: "An email address is required" }).email({ message: "Please provide a valid email address" }),
@@ -36,7 +37,6 @@ export default function SignUp() {
   const navigate = useNavigate();
   const { email, setEmail, setSessionId, setUserId, isLoading: isSessionLoading } = useSession();
   const [loading, setLoading] = useState<boolean>(false || isSessionLoading);
-  const [progressValue, setProgressValue] = useState<number>(0);
 
   useEffect(() => { setLoading(isSessionLoading); }, [isSessionLoading]);
   useEffect(() => { if (email) navigate("/groups"); }, [email]);
@@ -47,15 +47,18 @@ export default function SignUp() {
   });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    setLoading(true); setProgressValue(10);
+    setLoading(true);
 
     try {
       const { email, password } = values;
       const user = await firebaseAuthService.signUpUserWithEmailAndPassword({ email, password });
 
-      if (!user) { toast.error("User not found"); setLoading(false); setProgressValue(0); return; }
+      if (!user) { 
+        toast.error("User not found"); 
+        setLoading(false); 
+        return; 
+      }
 
-      setProgressValue(65);
 
       await API.METHODS.POST(
         API.ENDPOINTS.user.signup,
@@ -74,10 +77,14 @@ export default function SignUp() {
       );
     } catch (error: unknown) { toast.error(String(error)); }
 
-    setProgressValue(100); setLoading(false);
+    setLoading(false);
   };
 
-  if (loading) return <div className="w-full px-4 sm:px-6 lg:px-8 pt-8"><Progress value={progressValue} /></div>;
+  if (loading) 
+    return 
+      <div className="w-full px-4 sm:px-6 lg:px-8 pt-8">
+        <img src={LoadingStickMan} className="size-36" />
+      </div>;
 
   return (
     <div className="flex justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8">

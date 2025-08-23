@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { FirebaseAuthService } from "@/lib/firebase/FirebaseAuthService";
 import { useSession } from "@/providers/SessionProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,7 +40,6 @@ export default function Login() {
   const location = useLocation();
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [progressValue, setProgressValue] = useState<number>(0);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -54,7 +52,6 @@ export default function Login() {
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     setLoading(true);
     const { email, password } = values;
-    setProgressValue(10);
 
     try {
       const user = await firebaseAuthService.loginWithEmailAndPassword({ email, password });
@@ -64,7 +61,6 @@ export default function Login() {
         return;
       }
 
-      setProgressValue(50);
       await API.METHODS.POST(
         API.ENDPOINTS.user.login,
         { token: await user.getIdToken(), ...values },
@@ -86,7 +82,6 @@ export default function Login() {
       toast.error(String(error));
     }
 
-    setProgressValue(90);
     setLoading(false);
   };
 
@@ -95,7 +90,6 @@ export default function Login() {
       {loading ? 
       (
         <div className="px-6 py-4">
-          {/* <Progress value={progressValue} /> */}
           <img src={LoadingStickMan} className="size-36" />
         </div>
       ) : 
