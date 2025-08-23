@@ -1,10 +1,10 @@
 import { API } from "@/api";
 import { useSession } from "@/providers/SessionProvider";
-import { useCallback, useEffect, useState } from "react"
+import { Suspense, useCallback, useEffect, useState } from "react"
 import { toast } from "sonner";
 import { CreateAssignmentPopover } from "./CreateAssignmentPopup";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AssignmentCard from "./AssignmentCard";
+import AssignmentCard, { AssignmentCardSkeleton } from "./AssignmentCard";
 
 export enum TaskStatus {
   ACTIVE = 'ACTIVE',
@@ -84,11 +84,15 @@ export default function AssignmentDashboard() {
         </TabsList>
 
         <TabsContent value="owned">
-          <TaskList tasks={ownedAssignments} />
+          <Suspense fallback={<TaskListSkeleton />}>
+            <TaskList tasks={ownedAssignments} />
+          </Suspense>
         </TabsContent>
 
         <TabsContent value="assigned">
-          <TaskList tasks={assignedAssignments} />
+          <Suspense fallback={<TaskListSkeleton />}>
+            <TaskList tasks={assignedAssignments} />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>
@@ -104,6 +108,18 @@ function TaskList({ tasks }: { tasks: Assignment[] }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
       {tasks.map((task) => (
         <AssignmentCard key={task._id} assignment={task} />
+      ))}
+    </div>
+  );
+}
+
+export function TaskListSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div key={index} className="animate-pulse">
+          <AssignmentCardSkeleton />
+        </div>
       ))}
     </div>
   );

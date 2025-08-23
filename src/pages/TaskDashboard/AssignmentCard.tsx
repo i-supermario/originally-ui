@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Assignment } from "."
 import { useNavigate } from "react-router"
+import { Skeleton } from "@/components/ui/skeleton";
+
 
 export default function AssignmentCard({ assignment }: { assignment: Assignment }) {
 
@@ -32,4 +34,30 @@ export default function AssignmentCard({ assignment }: { assignment: Assignment 
       </CardContent>
     </Card>
   )
+}
+
+
+
+export function AssignmentCardSkeleton() {
+  return (
+    <Card className="rounded-2xl shadow-md">
+      <CardHeader className="space-y-1 pb-2">
+        <Skeleton className="h-8 w-40" /> {/* title */}
+      </CardHeader>
+      <CardContent className="space-y-3 text-sm">
+        <div>
+          <Skeleton className="h-4 w-28 mb-1" />
+          <Skeleton className="h-5 w-12" />
+        </div>
+        <div>
+          <Skeleton className="h-4 w-32 mb-1" />
+          <Skeleton className="h-5 w-56" />
+        </div>
+        <div>
+          <Skeleton className="h-4 w-24 mb-1" />
+          <Skeleton className="h-5 w-28" />
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

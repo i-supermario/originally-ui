@@ -1,15 +1,15 @@
-// pages/TaskView.tsx
 import { useEffect, useCallback, useState } from "react"
 import { useParams } from "react-router"
 import { toast } from "sonner"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { API } from "@/api"
 import { Assignment } from "../TaskDashboard"
-import LoadingStickMan from "@/assets/StickMan Walking.gif";
 import TaskSequenceList from "./TaskSequenceList"
 import GeocodingMapView from "@/pages/TaskView/MapView"
 import AssignUserPopover from "./AssignUserPopup"
 import { useSession } from "@/providers/SessionProvider"
+import { Skeleton } from "@/components/ui/skeleton";
+
 
 export default function TaskView() {
   const { assignmentId } = useParams()
@@ -36,7 +36,7 @@ export default function TaskView() {
   if (!assignmentId || !assignment) {
     return (
       <div className="flex justify-center items-center h-full">
-        <img src={LoadingStickMan} className="size-12" />
+        <AssignmentDetailSkeleton />
       </div>
     )
   }
@@ -70,4 +70,44 @@ export default function TaskView() {
       </Card>
     </div>
   )
+}
+
+
+export function AssignmentDetailSkeleton() {
+  return (
+    <div className="flex flex-col p-4 space-y-6">
+      {/* Assignment Info Card */}
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-start">
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-40" /> {/* title */}
+              <Skeleton className="h-4 w-64" /> {/* description */}
+              <Skeleton className="h-3 w-32" /> {/* due date */}
+              <Skeleton className="h-4 w-40" /> {/* assignee */}
+            </div>
+            <Skeleton className="h-8 w-24 rounded-md" /> {/* assign popover button */}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-4 w-20 mb-3" /> {/* "Tasks:" label */}
+          <div className="space-y-2">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="h-6 w-full rounded-md" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Map Card */}
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-5 w-16" /> {/* "Map" title */}
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-64 w-full rounded-lg" /> {/* map placeholder */}
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

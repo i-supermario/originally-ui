@@ -15,6 +15,8 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { AddMemberForm } from "./AddMemberForm";
 import { useNavigate } from "react-router";
+import { Skeleton } from "@/components/ui/skeleton";
+
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 10 },
@@ -279,5 +281,58 @@ function GroupCard({
         </Popover>
       </div>
     </motion.div>
+  );
+}
+
+export function GroupTableSkeleton() {
+  return (
+    <div className="w-full">
+      {/* Table skeleton for desktop */}
+      <div className="hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[120px]">Name</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Owner</TableHead>
+              <TableHead>Members</TableHead>
+              <TableHead>Add</TableHead>
+              <TableHead>Link</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <TableRow key={i}>
+                <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+                <TableCell><Skeleton className="h-6 w-48" /></TableCell>
+                <TableCell><Skeleton className="h-6 w-20" /></TableCell>
+                <TableCell><Skeleton className="h-6 w-28" /></TableCell>
+                <TableCell><Skeleton className="h-6 w-12" /></TableCell>
+                <TableCell><Skeleton className="h-6 w-10" /></TableCell>
+                <TableCell><Skeleton className="h-6 w-16" /></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Card skeleton for mobile */}
+      <div className="space-y-4 md:hidden">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="border rounded-lg p-4 space-y-3 shadow-sm">
+            <Skeleton className="h-6 w-32" />
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-4 w-24" />
+            <div className="flex space-x-2">
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+            </div>
+            <Skeleton className="h-8 w-full" />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
